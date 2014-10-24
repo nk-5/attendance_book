@@ -1,11 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
-$components = 'Auth/Components';
+$components = array('Auth', 'Session');
 class UsersController extends AppController
 {
   public $uses = array(
     'Appointment',
-    'Order'
+    'Order',
+    'User'
   );
 
   

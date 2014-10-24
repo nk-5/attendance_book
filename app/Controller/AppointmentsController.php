@@ -12,6 +12,7 @@ class AppointmentsController extends AppController {
     parent::beforeFilter();
     //認証不要ページの指定
     $this->Auth->allow('index');
+    //$this->layout = 'mylayout';
   }
 
   public function index($date_id = 0)
@@ -90,7 +91,7 @@ class AppointmentsController extends AppController {
       $data['Appointment']['user_id'] = $this->request->data['Appointment']['user_id'];
       $data['Appointment']['order_id'] = $this->request->data['Appointment']['order'];
       $data['Appointment']['date'] = $this->request->data['Appointment']['date'];
-      $data['Appointment']['start'] = $this->request->data['Appointment']['time'];
+      $data['Appointment']['start'] = $times[$this->request->data['Appointment']['time']];
       $data['Appointment']['table'] = 1; //1はフラグ
     }
     //予約済みデータ取得
@@ -101,7 +102,15 @@ class AppointmentsController extends AppController {
       'order' => array('start' => 'ASC')
     ));
 
-    //席が被った場合の自動変更処理　必要なし(?)
+    //データ渡し
+    $user = $this->Auth->user();
+    $this->set('user_id',$user['id']);
+    $this->set('user_name', $user['name']);
+    $this->set('date', $date);
+    $this->set('strdate', $date);
+    $this->set('times', $times);
+    $this->set('orders', $orders);
+    $this->set('link', $link);
   }
 
   public function delete($id = null){

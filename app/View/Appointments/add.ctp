@@ -1,8 +1,18 @@
+<?php echo  $this->Html->css('appo'); ?>
+
+<body background="room.jpg">
+
 <div class="appointments form">
 	<h2><?php echo __('Add Appointment'); ?></h2>
 	<?php
 		echo $this->Form->create('Appointment');
-		echo '<h3>' . $user_name . ' 様</h3>';
+    echo '<h3>' . $user_name . '</h3>';
+    var_dump($user_name);
+    var_dump($user_id);
+    var_dump($date);
+    var_dump($strdate);
+    var_dump($times);
+    var_dump($orders);
 		echo $this->Form->hidden('user_id', array(
 				'value' => $user_id
 		));
@@ -30,3 +40,5 @@
 		<li><?php echo $this->Html->link(__('List Appointments'), array('action' => 'index/'.$link)); ?></li>
 	</ul>
 </div>
+
+</body>
