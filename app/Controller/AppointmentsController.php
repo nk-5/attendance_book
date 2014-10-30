@@ -30,7 +30,6 @@ class AppointmentsController extends AppController {
     //予約データ取得
     $appo = $this->Appointment->find('all', array(
       'conditions' => array('date' => $date),
-      'order' => array('start' => 'ASC')//並び順の指定,
     ));
     //ログイン状態チェック
     $user = $this->Auth->user();
@@ -42,6 +41,7 @@ class AppointmentsController extends AppController {
       $this->set('page', 'view/'.$user['id']);
     }
     //タイムライン追加用クラス名生成
+    /*
     for($i=0; $i<count($appo); $i++){
       $appo[$i]['Appointment']['class'] = 'appo' . substr($appo[$i]['Appointment']['start'], 0, 2);
       $appo[$i]['Appointment']['height'] = $appo[$i]['Appointment']['order_id'];
@@ -54,6 +54,8 @@ class AppointmentsController extends AppController {
 
       }
     }
+     */
+
     //データ渡し
     $this->set('appointments', $appo);
     $this->set('strdate', $strdate);
@@ -88,29 +90,57 @@ class AppointmentsController extends AppController {
       'fields' => 'order'
     ));
     if($this->request->is('post')){
+/*
       $data['Appointment']['user_id'] = $this->request->data['Appointment']['user_id'];
       $data['Appointment']['order_id'] = $this->request->data['Appointment']['order'];
       $data['Appointment']['date'] = $this->request->data['Appointment']['date'];
       $data['Appointment']['start'] = $times[$this->request->data['Appointment']['time']];
       $data['Appointment']['table'] = 1; //1はフラグ
+ */
+      //ユーザー情報取得
+      $user_id = $this->data['Appointment']['user_id'];
+      $name = $this->data['Appointment']['name'];
+      $username = $this->data['Appointment']['username'];
+
+      var_dump($user_id);
+      var_dump($name);
+      var_dump($username);
+      var_dump($date);
+      var_dump($orders);
+
+
+      //予約データをSQLに保存
+      $data = array('appointments' => array('user_id' => $user_id),
+                                      array('name' => $name),
+                                      array('username' => $username),
+                                      array('date' => $date),
+                                      array('order' => $orders));
+      $this->Appointment->save($this->request->data);
     }
     //予約済みデータ取得
+    /*
     $appo = $this->Appointment->find('all', array(
       'conditions' => array(
         'date' => $data['Appointment']['date']
       ),
       'order' => array('start' => 'ASC')
     ));
+     */
 
     //データ渡し
     $user = $this->Auth->user();
     $this->set('user_id',$user['id']);
-    $this->set('user_name', $user['name']);
+    $this->set('username', $user['username']);
+    $this->set('name', $user['name']);
     $this->set('date', $date);
     $this->set('strdate', $date);
-    $this->set('times', $times);
     $this->set('orders', $orders);
     $this->set('link', $link);
+    //$this->set('appointments', $appo);
+    $this->set('strdate', $strdate);
+    $this->set('link', $link);
+    $this->set('prev', date('Ymd', strtotime($date . '-1 day')));
+    $this->set('next', date('Ymd', strtotime($date . '+1 day')));
   }
 
   public function delete($id = null){

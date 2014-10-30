@@ -51,7 +51,7 @@ class UsersController extends AppController
     //予約データ取得
     $appo = $this->Appointment->find('all', array(
       'conditions' => array('user_id' => $user['id']),
-      'order' => array('start' => 'ASC')
+      //'order' => array('start' => 'ASC')
     ));
     //オーダー取得
     $orders = $this->Order->find('list', array(

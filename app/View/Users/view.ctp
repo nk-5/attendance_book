@@ -19,14 +19,11 @@
     <tr>
         <th><?php echo __('Date'); ?></th>
         <th><?php echo __('Order'); ?></th>
-        <th><?php echo __('Start'); ?></th>
         <th class="actions"><?php echo __('Actions'); ?></th>
     </tr>
 <?php foreach ($appointments as $appointment): ?>
     <tr>
         <td><?php echo h($appointment['Appointment']['date']); ?></td>
-        <td><?php echo h($orders[$appointment['Appointment']['order_id']]); ?></td>
-        <td><?php echo h($appointment['Appointment']['start']); ?></td>
         <td class="actions">
             <?php echo $this->Form->postLink(__('Delete'), array('controller' => 'appointments', 'action' => 'delete', $appointment['Appointment']['id']), null, __('Are you sure you want to delete # %s?', $appointment['Appointment']['id'])); ?>
         </td>
