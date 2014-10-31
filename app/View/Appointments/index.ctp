@@ -1,4 +1,3 @@
-<?php echo $this->Html->css('appo') ?>
 
 <div class="appointments index">
   <h2><?php echo __('Appointments'); ?></h2>
@@ -9,17 +8,25 @@
   ?>
   </div>
   <h4><?php echo $strdate . __(' appointments'); ?></h4>
-  <ul class="seatmap">
-    <?php for($i=1; $i<15; $i++){
-      echo "<div class=\"$i\">[$i]</div>";
-    } ?>
-  </ul>
 
-  <p class="dragarea-p">時間帯</p>
-  <div class="dragarea">
-    <div class="order1"><p>AM~</p></div>
-    <div class="order2"><p>PM~</p></div>
-  </div>
+<?php
+    //print_r($appointments);
+?>
+<table>
+    <tr>
+      <th>Name</th>
+      <th>Order</th>
+      <th>username</th>
+    </tr>
+  <tr>
+  <?php foreach ($appointments as $appointment): ?>
+      <td><?php echo $appointment['Appointment']['name']; ?></td>
+      <td><?php echo $appointment['Appointment']['order']; ?></td>
+      <td><?php echo $appointment['Appointment']['username']; ?></td>
+    </tr>
+  <?php endforeach ?>
+  </table>
+
     
   </div>
 

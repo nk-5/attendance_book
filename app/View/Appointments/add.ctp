@@ -5,11 +5,13 @@
 	<?php
 		echo $this->Form->create('Appointment');
     echo '<h3>' . $username . '</h3>';
+/*
     var_dump($username);
     var_dump($user_id);
     var_dump($date);
     var_dump($strdate);
     var_dump($orders);
+ */
 ?>
 
 
@@ -25,7 +27,7 @@
 		echo $this->Form->hidden('user_id', array(
 				'value' => $user_id
       ));
-    echo $this->Form->hidden('username', array(
+   echo $this->Form->hidden('username', array(
       'value' => $username
     ));
     echo $this->Form->hidden('name', array(
@@ -51,9 +53,12 @@
     */
 
     echo $this->Form->input('order', array(
-      'options' => array('AM~', 'PM~')
+      'options' => array('AM~' => 'AM~',
+                        'PM~' => 'PM~')
     ));
-    var_dump($orders);
+
+
+    //var_dump($orders);
 
 		echo $this->Form->end(__('Submit'));
 	?>

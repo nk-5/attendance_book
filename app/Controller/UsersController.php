@@ -65,9 +65,30 @@ class UsersController extends AppController
 
   public function add()
   {
+      //ユーザー情報取得
+    $users = $this->User->find('all');
+
+
+    
     if($this->request->is('post')){
+
+      //ユーザー重複確認のためのフラグ生成
+      $i = 0;
+      foreach($users as $user){
+        if($user['User']['username'] === $this->request->data['User']['username'])
+          $i++;
+      }
+
+      //例外処理
+      if($this->request->data['User']['username'] == null || $this->request->data['User']['password'] == null || $this->request->data['User']['name'] == null){
+        $this->Session->setFlash(__('Please fill in the blanks.'));
+      }elseif($i == 1){
+        $this->Session->setFlash(__('This username username already exist'));
+      }
+      else{
       $this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
       $this->User->create();
+
       if($this->User->save($this->request->data)){
         $this->Session->setFlash(__('The user has been saved'));
         $this->redirect(array('action' => 'login'));
@@ -75,6 +96,8 @@ class UsersController extends AppController
         $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
       }
     }
+
+   }
   }
 
   public function delete($id = null)
