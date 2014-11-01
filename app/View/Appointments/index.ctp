@@ -1,3 +1,17 @@
+<div id='calendar'></div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+    },
+    editable: true,
+    events: "json-events.php",
+  })
+});
+</script>
 
 <div class="appointments index">
   <h2><?php echo __('Appointments'); ?></h2>
@@ -9,9 +23,7 @@
   </div>
   <h4><?php echo $strdate . __(' appointments'); ?></h4>
 
-<?php
-    //print_r($appointments);
-?>
+
 <table>
     <tr>
       <th>Name</th>
@@ -30,7 +42,7 @@
     
   </div>
 
-</div>
+
 <div class="actions">
   <h3><?php echo __('Actions'); ?></h3>
   <ul>
@@ -38,4 +50,5 @@
     <li><?php echo $this->Html->link(__('Add Appointment'), array('action' => 'add/'.$link)); ?></li>
     <li><?php echo $this->Html->link(__('Logout'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
   </ul>
+</div>
 </div>

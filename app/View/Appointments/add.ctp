@@ -1,5 +1,13 @@
 <?php echo  $this->Html->css('appo'); ?>
 
+<script type="text/javascript">
+     $(function(){
+       $('#date').datepicker({
+         dateFormat: 'yy-mm-dd',
+       });
+     });
+</script>
+
 <div class="appointments form">
 	<h2><?php echo __('Add Appointment'); ?></h2>
 	<?php
@@ -15,13 +23,14 @@
 ?>
 
 
-
+<!--
   <div class="paging">
   <?php
     echo $this->Html->link('< '.__('prev day'), array('action' => 'add/'.$prev));
     echo $this->Html->link(__('next day').' >', array('action' => 'add/'.$next));
   ?>
   </div>
+-->
 
 <?php
 		echo $this->Form->hidden('user_id', array(
@@ -33,10 +42,18 @@
     echo $this->Form->hidden('name', array(
       'value' => $name
     ));
+
+  /*
 		echo $this->Form->hidden('date', array(
-				'value' => $date
-		));
-		echo '<h4>' . $strdate . __(' appointments') .'</h4>';
+      'value' => $date
+    ));
+    var_dump($date);
+   */
+     
+
+    
+
+		//echo '<h4>' . $strdate . __(' appointments') .'</h4>';
     /*
       echo $this->Form->input('time', array(
 				'type' => 'select',
@@ -55,10 +72,22 @@
     echo $this->Form->input('order', array(
       'options' => array('AM~' => 'AM~',
                         'PM~' => 'PM~')
+                      ));
+
+    echo $this->Form->input('date', array(
+      'type' => 'text',
+      'id' => 'date',
     ));
+?>
+
+<!--
+<form action="" method="post">
+<p><input type="text" name="date" id="date" /></p>
+</form>
+-->
 
 
-    //var_dump($orders);
+<?php
 
 		echo $this->Form->end(__('Submit'));
 	?>

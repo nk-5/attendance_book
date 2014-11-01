@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 $components = array('Auth', 'Session');
+
 class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
@@ -36,6 +37,18 @@ class AppointmentsController extends AppController {
       )
     ));
 
+    //SQLからJSONデータを取得
+    $row = $this->Appointment->find('all', array(
+      'fields' => array('Appointment.name', 'Appointment.date', 'Appointment.order')
+    ));
+    $events = json_encode($row);
+    //var_dump($events);
+    //jsonファイルに書き出し（カレンダーに読み込むため)
+    $fp = fopen("json-events.php","w");// app/webroot/json-events.php
+    fwrite($fp, sprintf($events));
+    //var_dump(fwrite($fp, sprintf($events)));
+    fclose($fp);
+
 
 
     //ログイン状態チェック
@@ -54,6 +67,7 @@ class AppointmentsController extends AppController {
     $this->set('link', $link);
     $this->set('prev', date('Ymd', strtotime($date . '-1 day')));
     $this->set('next', date('Ymd', strtotime($date . '+1 day')));
+    $this->set('events', $events);
   }
 
   public function add($date_id = null)
@@ -95,14 +109,20 @@ class AppointmentsController extends AppController {
       //重複がないか確認
       if($appointments){
         $this->Session->setFlash('Duplicated!');
-      }else{
-      //重複がないなら予約データをSQLに保存
+      }elseif($this->request->data['Appointment']['date'] == null){
+          $this->Session->setFlash('Fill the Date');
+      }
+      else{
+      //問題ないなら予約データをSQLに保存
       $data = array('appointments' => array('user_id' => $user_id),
                                       array('name' => $name),
                                       array('username' => $username),
                                       array('date' => $date),
                                       array('order' => $orders));
       $this->Appointment->save($this->request->data);
+      if($this->Appointment->save($this->request->data)){
+        $this->Session->setFlash('Saved');
+      }
       }
     }
     //予約済みデータ取得

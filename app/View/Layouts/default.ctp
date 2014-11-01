@@ -32,8 +32,18 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
-		echo $this->fetch('script');
-	?>
+    echo $this->fetch('script');
+
+    echo $this->Html->script('fullcalendar/lib/moment.min.js');
+    echo $this->Html->css('fullcalendar/fullcalendar.css');
+    echo $this->Html->script('fullcalendar/lib/jquery.min.js');
+    echo $this->Html->script('fullcalendar/fullcalendar.min.js');
+    //echo $this->Html->script('fullcalendar/gcal.js');
+    echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.core.js');
+    echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.datepicker.js');
+    echo $this->Html->css('jquery-ui/css/start/jquery-ui-1.9.2.custom.css');
+?>
+
 </head>
 <body>
 	<div id="container">
