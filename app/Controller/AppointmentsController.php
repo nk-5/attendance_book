@@ -4,10 +4,7 @@ $components = array('Auth', 'Session');
 
 class AppointmentsController extends AppController {
   public $uses = array(
-    'Appointment',
-    'Time',
-    'Order',
-    'Event'
+    'Appointment'
   );
 
   public function beforeFilter()
@@ -52,11 +49,9 @@ class AppointmentsController extends AppController {
     $this->set('appointments', $appo);
     $this->set('strdate', $strdate);
     $this->set('link', $link);
-    $this->set('prev', date('Ymd', strtotime($date . '-1 day')));
-    $this->set('next', date('Ymd', strtotime($date . '+1 day')));
     
 
-    $sqlevents = $this->Event->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order` FROM attendance_book.appointments as events;");
+    $sqlevents = $this->Appointment->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order` FROM attendance_book.appointments as events;");
 
     $events = array();
     for($a=0; $a<count($sqlevents); $a++){
@@ -89,9 +84,10 @@ class AppointmentsController extends AppController {
       $link = date('Ymd');
     }
     //オーダー取得
-    $orders = $this->Order->find('list', array(
+    /*$orders = $this->Order->find('list', array(
       'fields' => 'order'
     ));
+    var_dump($orders);*/
     if($this->request->is('post')){
       //ユーザー情報取得
       $user_id = $this->data['Appointment']['user_id'];
@@ -116,8 +112,7 @@ class AppointmentsController extends AppController {
       $data = array('appointments' => array('user_id' => $user_id),
                                       array('name' => $name),
                                       array('username' => $username),
-                                      array('date' => $date),
-                                      array('order' => $orders));
+                                      array('date' => $date));
       $this->Appointment->save($this->request->data);
       if($this->Appointment->save($this->request->data)){
         $this->Session->setFlash('保存されました','default', array('class' => 'flash_success'));
@@ -132,7 +127,7 @@ class AppointmentsController extends AppController {
     $this->set('name', $user['name']);
     $this->set('date', $date);
     $this->set('strdate', $date);
-    $this->set('orders', $orders);
+    //$this->set('orders', $orders);
     $this->set('link', $link);
     //$this->set('appointments', $appo);
     $this->set('strdate', $strdate);

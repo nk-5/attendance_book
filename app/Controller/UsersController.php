@@ -5,7 +5,6 @@ class UsersController extends AppController
 {
   public $uses = array(
     'Appointment',
-    'Order',
     'User'
   );
 
@@ -60,14 +59,10 @@ class UsersController extends AppController
                             ),
       'order' => 'date',
     ));
-    //オーダー取得
-    $orders = $this->Order->find('list', array(
-      'fields' => 'order'
-    ));
     //データ渡し
     $this->set('user', $this->User->read(null, $id));
     $this->set('appointments', $appo);
-    $this->set('orders', $orders);
+    //$this->set('orders', $orders);
   }
 
   public function add()
