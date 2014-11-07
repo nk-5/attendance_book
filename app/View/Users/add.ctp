@@ -1,5 +1,7 @@
+<?php echo  $this->Html->css('appo'); ?>
+
 <div class="users form">
-	<h2><?php echo __('Add User'); ?></h2>
+	<h2><?php echo __('ユーザーの追加'); ?></h2>
 	<?php
     echo $this->Form->create('User');//UsersControllerのadd()に対してPOSTする
 		echo $this->Form->input('username', array(
@@ -14,7 +16,7 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Login'), array('action' => 'login')); ?></li>
-		<li><?php echo $this->Html->link(__('List Appointments'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('ログイン'), array('action' => 'login')); ?></li>
+		<li><?php echo $this->Html->link(__('予定一覧'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
 	</ul>
 </div>

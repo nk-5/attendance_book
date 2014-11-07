@@ -6,7 +6,8 @@ class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
     'Time',
-    'Order'
+    'Order',
+    'Event'
   );
 
   public function beforeFilter()
@@ -37,20 +38,6 @@ class AppointmentsController extends AppController {
       )
     ));
 
-    //SQLからJSONデータを取得
-    $row = $this->Appointment->find('all', array(
-      'fields' => array('Appointment.name', 'Appointment.date', 'Appointment.order')
-    ));
-    $events = json_encode($row);
-    //var_dump($events);
-    //jsonファイルに書き出し（カレンダーに読み込むため)
-    $fp = fopen("json-events.php","w");// app/webroot/json-events.php
-    fwrite($fp, sprintf($events));
-    //var_dump(fwrite($fp, sprintf($events)));
-    fclose($fp);
-
-
-
     //ログイン状態チェック
     $user = $this->Auth->user();
     if(empty($user)){
@@ -67,7 +54,26 @@ class AppointmentsController extends AppController {
     $this->set('link', $link);
     $this->set('prev', date('Ymd', strtotime($date . '-1 day')));
     $this->set('next', date('Ymd', strtotime($date . '+1 day')));
-    $this->set('events', $events);
+    
+
+    $sqlevents = $this->Event->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order` FROM attendance_book.appointments as events;");
+
+    $events = array();
+    for($a=0; $a<count($sqlevents); $a++){
+
+      $events[] = array(
+        'id' => $sqlevents[$a]["events"]["id"],
+        'title' => $sqlevents[$a]["events"]["title"] . $sqlevents[$a]["events"]["order"],
+        'start' => $sqlevents[$a]["events"]["start"]
+      );
+    }
+
+    $jsonevents = json_encode($events);
+    $fp = fopen("json-events.php","w");// app/webroot/json-events.php
+        fwrite($fp, sprintf($jsonevents));
+        //var_dump(fwrite($fp, sprintf($events)));
+        fclose($fp);
+ 
   }
 
   public function add($date_id = null)
@@ -87,13 +93,6 @@ class AppointmentsController extends AppController {
       'fields' => 'order'
     ));
     if($this->request->is('post')){
-/*
-      $data['Appointment']['user_id'] = $this->request->data['Appointment']['user_id'];
-      $data['Appointment']['order_id'] = $this->request->data['Appointment']['order'];
-      $data['Appointment']['date'] = $this->request->data['Appointment']['date'];
-      $data['Appointment']['start'] = $times[$this->request->data['Appointment']['time']];
-      $data['Appointment']['table'] = 1; //1はフラグ
- */
       //ユーザー情報取得
       $user_id = $this->data['Appointment']['user_id'];
       $name = $this->data['Appointment']['name'];
@@ -108,9 +107,9 @@ class AppointmentsController extends AppController {
 
       //重複がないか確認
       if($appointments){
-        $this->Session->setFlash('Duplicated!');
+        $this->Session->setFlash('重複しています', 'default', array('class' => 'flash_failure'));
       }elseif($this->request->data['Appointment']['date'] == null){
-          $this->Session->setFlash('Fill the Date');
+          $this->Session->setFlash('空欄を埋めてください','default',array('class' => 'flash_failure'));
       }
       else{
       //問題ないなら予約データをSQLに保存
@@ -121,19 +120,10 @@ class AppointmentsController extends AppController {
                                       array('order' => $orders));
       $this->Appointment->save($this->request->data);
       if($this->Appointment->save($this->request->data)){
-        $this->Session->setFlash('Saved');
+        $this->Session->setFlash('保存されました','default', array('class' => 'flash_success'));
       }
       }
     }
-    //予約済みデータ取得
-    /*
-    $appo = $this->Appointment->find('all', array(
-      'conditions' => array(
-        'date' => $data['Appointment']['date']
-      ),
-      'order' => array('start' => 'ASC')
-    ));
-     */
 
     //データ渡し
     $user = $this->Auth->user();
@@ -161,10 +151,10 @@ class AppointmentsController extends AppController {
       throw new NotFoundException(__('Invalid appointment'));
     }
     if($this->Appointment->delete()){
-      $this->Session->setFlash(__('Appointment deleted'));
+      $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
       $this->redirect(array('controller' => 'users',
       'action' => 'view/'.$user['id']));
     }
-    $this->Session->setFlash(__('Appointment was not deleted'));
+    $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
   }
 }

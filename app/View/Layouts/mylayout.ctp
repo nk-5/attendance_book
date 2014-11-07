@@ -21,6 +21,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 <!DOCTYPE html>
 <html>
 <head>
+<?php echo  $this->Html->css('appo'); ?>
 	<?php echo $this->Html->charset("utf-8"); ?>
 	<title>
 		<?php echo $cakeDescription ?>:

@@ -9,28 +9,11 @@
 </script>
 
 <div class="appointments form">
-	<h2><?php echo __('Add Appointment'); ?></h2>
+	<h2><?php echo __('出勤予定の追加'); ?></h2>
 	<?php
 		echo $this->Form->create('Appointment');
-    echo '<h3>' . $username . '</h3>';
-/*
-    var_dump($username);
-    var_dump($user_id);
-    var_dump($date);
-    var_dump($strdate);
-    var_dump($orders);
- */
+    echo '<h3>' . $name . '</h3>';
 ?>
-
-
-<!--
-  <div class="paging">
-  <?php
-    echo $this->Html->link('< '.__('prev day'), array('action' => 'add/'.$prev));
-    echo $this->Html->link(__('next day').' >', array('action' => 'add/'.$next));
-  ?>
-  </div>
--->
 
 <?php
 		echo $this->Form->hidden('user_id', array(
@@ -43,31 +26,6 @@
       'value' => $name
     ));
 
-  /*
-		echo $this->Form->hidden('date', array(
-      'value' => $date
-    ));
-    var_dump($date);
-   */
-     
-
-    
-
-		//echo '<h4>' . $strdate . __(' appointments') .'</h4>';
-    /*
-      echo $this->Form->input('time', array(
-				'type' => 'select',
-				'options' => $times,
-				'after' => ' 〜'
-      ));
-     */
-    
-   /* echo $this->Form->input('order', array(
-				'type' => 'radio',
-				'options' => $orders,
-				'value' => 1
-      ));
-    */
 
     echo $this->Form->input('order', array(
       'options' => array('AM~' => 'AM~',
@@ -80,13 +38,6 @@
     ));
 ?>
 
-<!--
-<form action="" method="post">
-<p><input type="text" name="date" id="date" /></p>
-</form>
--->
-
-
 <?php
 
 		echo $this->Form->end(__('Submit'));
@@ -95,8 +46,8 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('MyPage'), array('controller' => 'users', 'action' => 'view/'.$user_id)); ?> </li>
-		<li><?php echo $this->Html->link(__('List Appointments'), array('action' => 'index/'.$link)); ?></li>
+		<li><?php echo $this->Html->link(__('予定一覧'), array('controller' => 'appointments', 'action' => 'index')); ?></li>
+		<li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => 'view/'.$user_id)); ?> </li>
 	</ul>
 </div>
 

@@ -1,26 +1,35 @@
+<?php echo  $this->Html->css('appo'); ?>
 <div id='calendar'></div>
 
+
 <script type="text/javascript">
+
 $(document).ready(function(){
   $('#calendar').fullCalendar({
-    header: {
-      left: 'prev,next today',
-      center: 'title',
+    titleFormat: {
+      month: 'YYYY年M月',
     },
-    editable: true,
+    columnFormat:{
+      month: 'ddd'
+    },
+    dayNames: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+    dayNamesShort: ['日','月','火','水','木','金','土'],
+
+
+    editable: false,
     events: "json-events.php",
+
+    dayClick: function(){
+      location.href="appointments/add";
+    },
+      eventClick: function(){
+    }
   })
 });
 </script>
 
 <div class="appointments index">
-  <h2><?php echo __('Appointments'); ?></h2>
-  <div class="paging">
-  <?php
-    echo $this->Html->link('< '.__('prev day'), array('action' => 'index/'.$prev));
-    echo $this->Html->link(__('next day').' >', array('action' => 'index/'.$next));
-  ?>
-  </div>
+  <h2><?php echo __('今日の予定'); ?></h2>
   <h4><?php echo $strdate . __(' appointments'); ?></h4>
 
 
@@ -46,9 +55,9 @@ $(document).ready(function(){
 <div class="actions">
   <h3><?php echo __('Actions'); ?></h3>
   <ul>
-    <li><?php echo $this->Html->link(__($str), array('controller' => 'users', 'action' => $page)); ?> </li>
-    <li><?php echo $this->Html->link(__('Add Appointment'), array('action' => 'add/'.$link)); ?></li>
-    <li><?php echo $this->Html->link(__('Logout'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
+    <li><?php echo $this->Html->link(__('勤務予定の追加'), array('action' => 'add/'.$link)); ?></li>
+    <li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => $page)); ?> </li>
+    <li><?php echo $this->Html->link(__('ログアウト'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
   </ul>
 </div>
 </div>
