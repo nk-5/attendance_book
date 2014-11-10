@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('AppointmentsController','Controller');
 $components = array('Auth', 'Session');
 class UsersController extends AppController
 {
@@ -122,7 +121,7 @@ class UsersController extends AppController
     //$this->set('orders', $orders);
   }
 
-  public function delete($id = null, $username)
+  public function delete($id = null, $username, $own_id)
   {
 
     if(!$this->request->is('post')){
@@ -138,7 +137,7 @@ class UsersController extends AppController
     if($this->User->delete($id)){
       $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
       $this->redirect(array('controller' => 'users',
-      'action' => 'admin'));
+      'action' => 'admin/'.$own_id));
     }
     $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
   }

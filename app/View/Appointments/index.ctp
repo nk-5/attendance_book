@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 
     editable: false,
-    events: "json-events.php",
+    events: <?php echo $jsonevents; ?>,
 
     dayClick: function(){
       location.href="appointments/add";

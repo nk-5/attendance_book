@@ -64,11 +64,7 @@ class AppointmentsController extends AppController {
     }
 
     $jsonevents = json_encode($events);
-    $fp = fopen("json-events.php","w");// app/webroot/json-events.php
-        fwrite($fp, sprintf($jsonevents));
-        //var_dump(fwrite($fp, sprintf($events)));
-        fclose($fp);
- 
+    $this->set('jsonevents',$jsonevents);
   }
 
   public function add($date_id = null)
@@ -124,7 +120,6 @@ class AppointmentsController extends AppController {
     $this->set('strdate', $date);
     $this->set('link', $link);
     $this->set('strdate', $strdate);
-    $this->set('link', $link);
   }
 
   public function delete($id = null){

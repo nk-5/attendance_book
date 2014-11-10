@@ -19,7 +19,7 @@
         <td><?php if($user['User']['admin']) echo '管理者';
 else echo '一般ユーザー';?></td>
         <td class="actions">
-            <?php echo $this->Form->postLink(__('削除'), array('controller' => 'users', 'action' => 'delete', $user['User']['id'], $user['User']['username']), null, __('本当に削除しますか？')); ?>
+            <?php echo $this->Form->postLink(__('削除'), array('controller' => 'users', 'action' => 'delete', $user['User']['id'], $user['User']['username'], $own_id), null, __('本当に削除しますか？')); ?>
         </td>
         <td class="actions"><?php echo $this->Form->postLink(__('管理者にする'), array('controller' => 'users', 'action' => 'administrate', $user['User']['id'], $own_id), null, __('本当に管理者にしますか？')); ?>
         </td>
