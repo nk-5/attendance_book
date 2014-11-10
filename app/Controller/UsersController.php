@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('AppointmentsController','Controller');
 $components = array('Auth', 'Session');
 class UsersController extends AppController
 {
@@ -69,8 +70,6 @@ class UsersController extends AppController
   {
       //ユーザー情報取得
     $users = $this->User->find('all');
-
-
     
     if($this->request->is('post')){
 
@@ -92,30 +91,83 @@ class UsersController extends AppController
       $this->User->create();
 
       if($this->User->save($this->request->data)){
-        $this->Session->setFlash('保存されました','default', array('class' => 'flush_success'));
+        $this->Session->setFlash('保存されました','default', array('class' => 'flraush_success'));
         $this->redirect(array('action' => 'login'));
       }else{
-        $this->Session->setFlash('保存できませんでした','default',array('class' => 'flush_failure'));
+        $this->Session->setFlash('保存できませんでした','default',array('class' => 'flash_failure'));
       }
     }
 
    }
   }
 
-  public function delete($id = null)
+  public function admin($id)
   {
+    $this->User->id = $id;
+    
+    //ユーザー情報取得
+    $all_users = $this->User->find('all');
+    $users = $this->User->find('all', array(
+      'conditions' => array('id' => $id)));
+    if($users[0]['User']['admin'] == 0){
+      $this->Session->setFlash('管理者権限が必要です','default',array('class' => 'flash_failure'));
+      $this->redirect(array('controller' => 'users','action' => "view/".$users[0]['User']['id']));
+    }
+
+    $user = $this->Auth->user();
+    
+    //データ渡し
+    $this->set('users',$all_users);
+    $this->set('own_id', $id);
+    //$this->set('orders', $orders);
+  }
+
+  public function delete($id = null, $username)
+  {
+
     if(!$this->request->is('post')){
       throw new MethodNotAllowedException();
     }
-    $this->User->id = $id;
-    if(!$this->User->exists()){
-      throw new NotFoundException(__('Invalid user'));
-    }
-    if($this->User->delete()){
+    $user = $this->Auth->user();
+
+    //削除するユーザーの予約を全削除
+    $users = $this->User->find('all');
+
+    $this->requestAction("Appointments/delete_All/$username");
+
+    if($this->User->delete($id)){
       $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
-      $this->redirect(array('action' => 'login'));
+      $this->redirect(array('controller' => 'users',
+      'action' => 'admin'));
     }
-    $this->Session->setFlash('User was not deleted','default',array('class' => 'flash_failure'));
-    $this->redirect(array('action' => 'view'));
+    $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
+  }
+
+  public function administrate($id, $own_id){
+    if(!$this->request->is('post')){
+      throw new MethodNotAllowedException();
+    }
+
+    $data = array('admin' => 1);
+    $conditions = array('id' => "$id");
+
+    $this->User->updateAll($data, $conditions);
+    $this->Session->setFlash('管理者権限が変更されました','default',array('class' => 'flash_success'));
+    $this->redirect(array('controller' => 'users',
+    'action' => "admin/".$own_id));
+  }
+
+  public function unadministrate($id, $own_id){
+    if(!$this->request->is('post')){
+      throw new MethodNotAllowedException();
+    }
+
+    $data = array('admin' => 0);
+    $conditions = array('id' => "$id");
+
+    $this->User->updateAll($data, $conditions);
+    $this->Session->setFlash('管理者権限が変更されました','default',array('class' => 'flash_success'));
+    $this->redirect(array('controller' => 'users',
+    'action' => 'admin/'.$own_id));
   }
 }

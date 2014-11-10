@@ -38,6 +38,6 @@
     <ul>
     <li><?php echo $this->Html->link(__('予定一覧'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
         <li><?php echo $this->Html->link(__('ログアウト'), array('action' => 'logout')); ?> </li>
-        <li><?php echo $this->Form->postLink(__('ユーザーの削除'), array('action' => 'delete', $user['User']['id']), null, __('本当にユーザーを削除しますか？')); ?> </li>
+        <li><?php echo $this->Html->link('ユーザーの管理', array('controller' => 'users', 'action' => "admin/".$user['User']['id'])); ?>
     </ul>
 </div>

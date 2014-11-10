@@ -58,7 +58,7 @@ class AppointmentsController extends AppController {
 
       $events[] = array(
         'id' => $sqlevents[$a]["events"]["id"],
-        'title' => $sqlevents[$a]["events"]["title"] . $sqlevents[$a]["events"]["order"],
+        'title' => $sqlevents[$a]["events"]["title"] . "  ". $sqlevents[$a]["events"]["order"],
         'start' => $sqlevents[$a]["events"]["start"]
       );
     }
@@ -83,11 +83,6 @@ class AppointmentsController extends AppController {
       $date = date('Y-m-d');
       $link = date('Ymd');
     }
-    //オーダー取得
-    /*$orders = $this->Order->find('list', array(
-      'fields' => 'order'
-    ));
-    var_dump($orders);*/
     if($this->request->is('post')){
       //ユーザー情報取得
       $user_id = $this->data['Appointment']['user_id'];
@@ -127,13 +122,9 @@ class AppointmentsController extends AppController {
     $this->set('name', $user['name']);
     $this->set('date', $date);
     $this->set('strdate', $date);
-    //$this->set('orders', $orders);
     $this->set('link', $link);
-    //$this->set('appointments', $appo);
     $this->set('strdate', $strdate);
     $this->set('link', $link);
-    $this->set('prev', date('Ymd', strtotime($date . '-1 day')));
-    $this->set('next', date('Ymd', strtotime($date . '+1 day')));
   }
 
   public function delete($id = null){
@@ -152,4 +143,12 @@ class AppointmentsController extends AppController {
     }
     $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
   }
+
+
+  public function delete_All($username){
+    $conditions = array('username' => "$username");
+    if(!$this->Appointment->deleteAll($conditions))
+      $this->Session->setFlash('予約データも削除されました','default',array('class' => 'flash_success'));
+  }
+
 }
