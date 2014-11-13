@@ -45,7 +45,19 @@
 </head>
 <body>
 	<div id="container">
-		<div id="header">
+    <div id="header">
+      <div id="header_menu">
+      <?php
+        if(isset($user)):
+          echo $this->Html->link('ログアウト','/users/logout');
+        else:
+          echo $this->Html->link('ログイン','/users/login');
+          echo "   ";
+          echo $this->Html->link('新規登録','/users/add');
+        endif;
+?>
+</div>
+
 		</div>
 		<div id="content">
 

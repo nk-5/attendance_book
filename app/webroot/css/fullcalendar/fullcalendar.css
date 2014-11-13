@@ -56,6 +56,7 @@ body .fc { /* extra precedence to overcome jqui */
 }
 
 
+
 /* Icons (inline elements with styled text that mock arrow icons)
 --------------------------------------------------------------------------------------------------*/
 
@@ -931,3 +932,5 @@ be a descendant of the grid when it is being dragged.
 .fc-time-grid-event .fc-resizer:after {
 	content: "=";
 }
+
+

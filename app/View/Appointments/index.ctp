@@ -1,6 +1,6 @@
 <?php echo  $this->Html->css('appo'); ?>
+     
 <div id='calendar'></div>
-
 
 <script type="text/javascript">
 
@@ -27,6 +27,7 @@ $(document).ready(function(){
   })
 });
 </script>
+
 
 <div class="appointments index">
   <h2><?php echo __('今日の予定'); ?></h2>
@@ -61,3 +62,11 @@ $(document).ready(function(){
   </ul>
 </div>
 </div>
+
+<script>
+$(document).ready(function(){
+$(".class<?php echo $user_id;?>").addClass("my-events");
+});
+</script>
+
+

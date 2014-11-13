@@ -12,6 +12,7 @@ class AppointmentsController extends AppController {
     parent::beforeFilter();
     //認証不要ページの指定
     $this->Auth->allow('index');
+    $this->set('user', $this->Auth->user());
     //$this->layout = 'mylayout';
   }
 
@@ -45,21 +46,25 @@ class AppointmentsController extends AppController {
       $this->set('page', 'view/'.$user['id']);
     }
 
+
     //データ渡し
     $this->set('appointments', $appo);
     $this->set('strdate', $strdate);
     $this->set('link', $link);
+    $this->set('user_id', $user['id']);
+    $this->set('name',$user['name']);
     
 
-    $sqlevents = $this->Appointment->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order` FROM attendance_book.appointments as events;");
+    $sqlevents = $this->Appointment->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order`, events.user_id AS className FROM attendance_book.appointments as events;");
 
     $events = array();
     for($a=0; $a<count($sqlevents); $a++){
 
       $events[] = array(
         'id' => $sqlevents[$a]["events"]["id"],
-        'title' => $sqlevents[$a]["events"]["title"] . "  ". $sqlevents[$a]["events"]["order"],
-        'start' => $sqlevents[$a]["events"]["start"]
+        'title' => $sqlevents[$a]["events"]["title"] . " ". $sqlevents[$a]["events"]["order"],
+        'start' => $sqlevents[$a]["events"]["start"],
+        'className' => "class" . $sqlevents[$a]["events"]["className"]
       );
     }
 
