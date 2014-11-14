@@ -4,7 +4,8 @@ $components = array('Auth', 'Session');
 
 class AppointmentsController extends AppController {
   public $uses = array(
-    'Appointment'
+    'Appointment',
+    'User'
   );
 
   public function beforeFilter()
@@ -46,25 +47,23 @@ class AppointmentsController extends AppController {
       $this->set('page', 'view/'.$user['id']);
     }
 
-
     //データ渡し
     $this->set('appointments', $appo);
     $this->set('strdate', $strdate);
     $this->set('link', $link);
     $this->set('user_id', $user['id']);
     $this->set('name',$user['name']);
-    
 
-    $sqlevents = $this->Appointment->query("SELECT events.id AS id, events.name AS title, events.date AS start, events.order AS `order`, events.user_id AS className FROM attendance_book.appointments as events;");
+    $sqlevents = $this->Appointment->query("SELECT appointments.id AS `id`, users.name AS `title`, appointments.date AS `start`, appointments.order AS `order`, users.id AS className FROM appointments, users WHERE appointments.user_id = users.id");
 
     $events = array();
     for($a=0; $a<count($sqlevents); $a++){
 
       $events[] = array(
-        'id' => $sqlevents[$a]["events"]["id"],
-        'title' => $sqlevents[$a]["events"]["title"] . " ". $sqlevents[$a]["events"]["order"],
-        'start' => $sqlevents[$a]["events"]["start"],
-        'className' => "class" . $sqlevents[$a]["events"]["className"]
+        'id' => $sqlevents[$a]["appointments"]["id"],
+        'title' => $sqlevents[$a]["users"]["title"] . " ". $sqlevents[$a]["appointments"]["order"],
+        'start' => $sqlevents[$a]["appointments"]["start"],
+        'className' => "class" . $sqlevents[$a]["users"]["className"]
       );
     }
 
@@ -87,15 +86,14 @@ class AppointmentsController extends AppController {
     if($this->request->is('post')){
       //ユーザー情報取得
       $user_id = $this->data['Appointment']['user_id'];
-      $name = $this->data['Appointment']['name'];
-      $username = $this->data['Appointment']['username'];
+      $name = $this->Auth->user('name');
+      $username = $this->Auth->user('username');
 
-      $appointments = $this->Appointment->find('all', array(
-        'conditions' => array(
-          'date' => $this->request->data['Appointment']['date'],
-          'username' => $this->request->data['Appointment']['username']
-        )
-      ));
+      $post_date = $this->request->data['Appointment']['date'];
+
+      $appointments = $this->Appointment->query("SELECT users.id AS `user_id`, users.name AS `name`, users.username AS `username`, appointments.date AS `date` 
+        FROM appointments, users
+        WHERE appointments.date = \"$post_date\" AND appointments.user_id = \"$user_id\"");
 
       //重複がないか確認
       if($appointments){
@@ -106,8 +104,6 @@ class AppointmentsController extends AppController {
       else{
       //問題ないなら予約データをSQLに保存
       $data = array('appointments' => array('user_id' => $user_id),
-                                      array('name' => $name),
-                                      array('username' => $username),
                                       array('date' => $date));
       $this->Appointment->save($this->request->data);
       if($this->Appointment->save($this->request->data)){
@@ -119,7 +115,7 @@ class AppointmentsController extends AppController {
     //データ渡し
     $user = $this->Auth->user();
     $this->set('user_id',$user['id']);
-    $this->set('username', $user['username']);
+    $this->set('username', $this->Auth->user('username'));
     $this->set('name', $user['name']);
     $this->set('date', $date);
     $this->set('strdate', $date);

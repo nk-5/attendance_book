@@ -41,10 +41,10 @@ $(document).ready(function(){
       <th>username</th>
     </tr>
   <tr>
-  <?php foreach ($appointments as $appointment): ?>
-      <td><?php echo $appointment['Appointment']['name']; ?></td>
-      <td><?php echo $appointment['Appointment']['order']; ?></td>
-      <td><?php echo $appointment['Appointment']['username']; ?></td>
+  <?php foreach ($appointments as $item): ?>
+      <td><?php echo $item['User']['name']; ?></td>
+      <td><?php echo $item['Appointment']['order']; ?></td>
+      <td><?php echo $item['User']['username']; ?></td>
     </tr>
   <?php endforeach ?>
   </table>
@@ -56,7 +56,7 @@ $(document).ready(function(){
 <div class="actions">
   <h3><?php echo __('Actions'); ?></h3>
   <ul>
-    <li><?php echo $this->Html->link(__('勤務予定の追加'), array('action' => 'add/'.$link)); ?></li>
+    <li><?php echo $this->Html->link(__('予定の追加'), array('action' => 'add/'.$link)); ?></li>
     <li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => $page)); ?> </li>
     <li><?php echo $this->Html->link(__('ログアウト'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
   </ul>
@@ -67,6 +67,10 @@ $(document).ready(function(){
 $(document).ready(function(){
 $(".class<?php echo $user_id;?>").addClass("my-events");
 });
+$(document).ready(function(){
+  $("button").click(function(){
+  $(".class<?php echo $user_id;?>").addClass("my-events");
+  });
+});
 </script>
-
 

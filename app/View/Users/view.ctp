@@ -4,15 +4,15 @@
     <dl>
         <dt><?php echo __('Id'); ?></dt>
         <dd>
-            <?php echo h($user['User']['id']); ?>
+            <?php echo h($user['id']); ?>
         </dd>
         <dt><?php echo __('Name'); ?></dt>
         <dd>
-            <?php echo h($user['User']['name']); ?>
+            <?php echo h($user['name']); ?>
         </dd>
         <dt><?php echo __('E-mail(username)'); ?></dt>
         <dd>
-            <?php echo h($user['User']['username']); ?>
+            <?php echo h($user['username']); ?>
         </dd>
     </dl>
     <h3>予定リスト</h3>
@@ -36,8 +36,9 @@
 <div class="actions">
     <h3><?php echo __('Actions'); ?></h3>
     <ul>
-    <li><?php echo $this->Html->link(__('予定一覧'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
+    <li><?php echo $this->Html->link(__('HOME'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
         <li><?php echo $this->Html->link(__('ログアウト'), array('action' => 'logout')); ?> </li>
-        <li><?php echo $this->Html->link('ユーザーの管理', array('controller' => 'users', 'action' => "admin/".$user['User']['id'])); ?>
+        <li><?php echo $this->Html->link('パスワードの変更', array('controller' => 'users', 'action' => 'pass'))?></li>
+        <li><?php echo $this->Html->link('ユーザーの管理', array('controller' => 'users', 'action' => "admin/".$user['id'])); ?>
     </ul>
 </div>

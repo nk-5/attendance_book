@@ -49,10 +49,14 @@
       <div id="header_menu">
       <?php
         if(isset($user)):
-          echo $this->Html->link('ログアウト','/users/logout');
+          echo $this->Html->link('マイページ','/users/view/'.$user['id']);
+          echo " | ";
+          echo $this->Html->link('予定追加','/appointments/add');
+          echo " | ";
+          echo $this->Html->link('HOME','/appointments');
         else:
           echo $this->Html->link('ログイン','/users/login');
-          echo "   ";
+          echo " | ";
           echo $this->Html->link('新規登録','/users/add');
         endif;
 ?>

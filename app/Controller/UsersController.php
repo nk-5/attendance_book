@@ -13,6 +13,7 @@ class UsersController extends AppController
   {
     parent::beforeFilter();
     $this->Auth->allow('login','add');
+    $this->set('user', $this->Auth->user());
   }
 
   public function login() 
@@ -42,6 +43,7 @@ class UsersController extends AppController
   {
     //ユーザー情報取得
     $this->User->id = $id;
+    $user_id = $this->Auth->user('id');
     //今日の日付を取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
@@ -60,8 +62,10 @@ class UsersController extends AppController
       'order' => 'date',
     ));
     //データ渡し
-    $this->set('user', $this->User->read(null, $id));
+    //$this->set('user', $this->User->read(null, $id));
     $this->set('appointments', $appo);
+    $this->set('user_id',$user_id);
+    $this->set('user', $this->Auth->user());
     //$this->set('orders', $orders);
   }
 
@@ -156,8 +160,7 @@ class UsersController extends AppController
     'action' => "admin/".$own_id));
   }
 
-  public function unadministrate($id, $own_id){
-    if(!$this->request->is('post')){
+  public function unadministrate($id, $own_id){    if(!$this->request->is('post')){
       throw new MethodNotAllowedException();
     }
 
@@ -168,5 +171,29 @@ class UsersController extends AppController
     $this->Session->setFlash('管理者権限が変更されました','default',array('class' => 'flash_success'));
     $this->redirect(array('controller' => 'users',
     'action' => 'admin/'.$own_id));
+  }
+
+  public function pass($id = null){
+    $id = $this->Auth->user('id');
+    $this->User->id = $id;
+    if(!$this->User->exists()){
+      throw new NotFoundException(__('無効なユーザーです'));
+    }
+
+    if($this->request->is('post')){
+      $user = $this->User->read();
+      if($user['User']['password'] === AuthComponent::password($this->request->data['User']['password'])){
+        if($this->request->data['User']['new_password_1'] === $this->request->data['User']['new_password_2']){
+          $this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['new_password_1']);
+          if($this->User->save($this->request->data)){
+            $this->Session->setFlash('パスワードを変更しました', 'default', array('class' => 'flash_success'));
+            $this->redirect(array('controller' => 'appointments', 'action' => 'index'));
+          }else{
+            $this->Session->setFlash('エラー', 'default', array('class' => 'flash_failure'));
+          }
+        }else $this->Session->setFlash('新しいパスワードが一致しません。もう一度入力してください。', 'default', array('class' => 'flash_failure'));
+      }else $this->Session->setFlash('現在のパスワードが違います。もう一度入力してください。', 'default', array('class' => 'flash_failure'));
+    }
+    $this->render('pass');
   }
 }
