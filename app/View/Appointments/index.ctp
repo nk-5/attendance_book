@@ -23,6 +23,7 @@ $(document).ready(function(){
       location.href="appointments/add";
     },
       eventClick: function(){
+        location.href="users/view/<?php echo $user_id?>";
     }
   })
 });

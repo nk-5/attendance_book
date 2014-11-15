@@ -8,9 +8,10 @@
 			'label' => __('E-mail(username)')
 		));
 		echo $this->Form->input('password');
-    echo $this->Form->input('name');
-		echo $this->Form->end(__('Submit'));
-	?>
+    echo $this->Form->input('name');?>
+    <div class = "submit_button">
+<?php echo $this->Form->end(__('Submit'));?>
+    </div>
 </div>
 
 <div class="actions">

@@ -1,20 +1,41 @@
 .flash_success{
-  background-color: lightYellow;
-  border: 1px solid #E6DB55;
+  background-color: white;
+  color: #3a87ad;
+  border: 1px solid #3a87ad;
   padding: 12px;
 }
 
 .flash_failure{
   color: #CD0A0A;
   border: 1px solid #CD0A0A;
-  background-color: #FEF1EC;
   padding: 12px;
 }
 
 
 .my-events{
-  background-color: darkorange;
-  color: black;
+  background-color: #8C98A5;
   border-width: 5px;
-  border-color: darkorange;
+  border-color: #8c98a5;
+}
+.my-events:hover{
+  color: black;
+}
+
+.fc-widget-content{
+  cursor: pointer;
+}
+
+.fc-button{
+  background: #3a87ad;
+  color: white
+}
+
+input[type=submit]{
+  background: #3a87ad !important;
+}
+
+input[type=submit]:hover{
+  background: white !important;
+  color: #3a87ad!important;
+  border-color: #3a87ad!important;
 }

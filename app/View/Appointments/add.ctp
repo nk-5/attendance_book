@@ -28,6 +28,8 @@
 
 
     echo $this->Form->input('order', array(
+      'type' => 'radio',
+      'value' => 'AM~',
       'options' => array('AM~' => 'AM~',
                         'PM~' => 'PM~')
                       ));
@@ -37,11 +39,10 @@
       'id' => 'date',
     ));
 ?>
-
+<div class="submit-button"
 <?php
-
 		echo $this->Form->end(__('Submit'));
-	?>
+?>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>

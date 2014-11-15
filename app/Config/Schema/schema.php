@@ -5,7 +5,24 @@ class AppSchema extends CakeSchema {
 		return true;
 	}
 
-	public function after($event = array()) {
+  public function after($event = array()) {
+    if(isset($event['create']){
+      switch ($event['create']){
+      case: 'users':
+        App::uses('ClassRegistry','Utility');
+        $user = ClassRegistry::init('User');
+        $user = create();
+        $user->save(
+          array('User' => array(
+            'username' => 'root',
+            'password' => 'root',
+            'name' => '管理者',
+            'admin' => 1
+          ));
+        break;
+        )
+      }
+    })
 	}
 
 	public $appointments = array(
