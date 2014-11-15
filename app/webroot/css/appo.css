@@ -32,6 +32,7 @@
 
 input[type=submit]{
   background: #3a87ad !important;
+  border-color: #3a87ad !important;
 }
 
 input[type=submit]:hover{

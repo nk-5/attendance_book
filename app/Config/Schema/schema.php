@@ -6,23 +6,22 @@ class AppSchema extends CakeSchema {
 	}
 
   public function after($event = array()) {
-    if(isset($event['create']){
+    if(isset($event['create'])){
       switch ($event['create']){
-      case: 'users':
+      case 'users':
         App::uses('ClassRegistry','Utility');
         $user = ClassRegistry::init('User');
-        $user = create();
+        $user->create();
         $user->save(
           array('User' => array(
             'username' => 'root',
             'password' => 'root',
             'name' => '管理者',
-            'admin' => 1
-          ));
+            'admin' => '1'
+          )));
         break;
-        )
       }
-    })
+    }
 	}
 
 	public $appointments = array(
