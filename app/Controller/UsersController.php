@@ -51,8 +51,6 @@ class UsersController extends AppController
       ),
       'fields' => 'User.name',
     ));
-    var_dump($name);
-    echo $name[0]['User']['name'];
     //今日の日付を取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
