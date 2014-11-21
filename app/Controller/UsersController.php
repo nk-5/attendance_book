@@ -43,7 +43,16 @@ class UsersController extends AppController
   {
     //ユーザー情報取得
     $this->User->id = $id;
-    $user_id = $this->Auth->user('id');
+    //$user_id = $this->Auth->user('id');
+    //ユーザー名変更をログアウトせずに反映させるためnameだけ別で取る
+    $name = $this->User->find('all',array(
+      'conditions' => array(
+        'id' => $id,
+      ),
+      'fields' => 'User.name',
+    ));
+    var_dump($name);
+    echo $name[0]['User']['name'];
     //今日の日付を取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
@@ -62,11 +71,9 @@ class UsersController extends AppController
       'order' => 'date',
     ));
     //データ渡し
-    //$this->set('user', $this->User->read(null, $id));
     $this->set('appointments', $appo);
-    $this->set('user_id',$user_id);
     $this->set('user', $this->Auth->user());
-    //$this->set('orders', $orders);
+    $this->set('name', $name[0]['User']['name']);
   }
 
   public function add()
@@ -85,19 +92,22 @@ class UsersController extends AppController
 
       //例外処理
       if($this->request->data['User']['username'] == null || $this->request->data['User']['password'] == null || $this->request->data['User']['name'] == null){
-        $this->Session->setFlash(__('空欄を埋めてください'));
+        $this->Session->setFlash(__('空欄を埋めてください。'));
       }elseif($i == 1){
-        $this->Session->setFlash('このユーザー名は使われています','default',array('class' => 'flash_failure'));
+        $this->Session->setFlash('このユーザー名は使われています。','default',array('class' => 'flash_failure'));
+      }
+      elseif($this->data['User']['password'] !== $this->data['User']['確認用']){
+        $this->Session->setFlash('パスワードが一致しません。','default',array('class' => 'flash_failure'));
       }
       else{
       $this->request->data['User']['password'] = AuthComponent::password($this->request->data['User']['password']);
       $this->User->create();
 
       if($this->User->save($this->request->data)){
-        $this->Session->setFlash('保存されました','default', array('class' => 'flraush_success'));
+        $this->Session->setFlash('保存されました。','default', array('class' => 'flraush_success'));
         $this->redirect(array('action' => 'login'));
       }else{
-        $this->Session->setFlash('保存できませんでした','default',array('class' => 'flash_failure'));
+        $this->Session->setFlash('保存できませんでした。','default',array('class' => 'flash_failure'));
       }
     }
 
@@ -195,5 +205,25 @@ class UsersController extends AppController
       }else $this->Session->setFlash('現在のパスワードが違います。もう一度入力してください。', 'default', array('class' => 'flash_failure'));
     }
     $this->render('pass');
+  }
+
+  public function name($id = null){
+
+    $id = $this->Auth->user('id');
+    $this->User->id = $id;
+    if(!$this->User->exists()){
+      throw new NotFoundException(__('無効なユーザーです'));
+    }
+
+    if($this->request->is('post')){
+      $user = $this->User->read();
+      if($this->User->save($this->request->data)){
+
+        $this->Session->setFlash('名前を変更しました', 'default', array('class' => 'flash_success'));
+
+      $this->redirect(array('controller' => 'appointments','action' => '' ));
+      }
+      
+    }
   }
 }

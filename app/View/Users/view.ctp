@@ -8,7 +8,7 @@
         </dd>
         <dt><?php echo __('Name'); ?></dt>
         <dd>
-            <?php echo h($user['name']); ?>
+            <?php echo $name; ?>
         </dd>
         <dt><?php echo __('E-mail(username)'); ?></dt>
         <dd>
@@ -39,6 +39,7 @@
     <li><?php echo $this->Html->link(__('HOME'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
         <li><?php echo $this->Html->link(__('ログアウト'), array('action' => 'logout')); ?> </li>
         <li><?php echo $this->Html->link('パスワードの変更', array('controller' => 'users', 'action' => 'pass'))?></li>
+        <li><?php echo $this->Html->link('名前の変更', array('controller' => 'users', 'action' => 'name'))?></li>
         <li><?php echo $this->Html->link('ユーザーの管理', array('controller' => 'users', 'action' => "admin/".$user['id'])); ?>
     </ul>
 </div>

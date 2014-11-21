@@ -7,7 +7,10 @@
 		echo $this->Form->input('username', array(
 			'label' => __('E-mail(username)')
 		));
-		echo $this->Form->input('password');
+    echo $this->Form->input('password');
+    echo $this->Form->input('確認用',array(
+      'type' => 'password',
+    ));
     echo $this->Form->input('name');?>
     <div class = "submit_button">
 <?php echo $this->Form->end(__('Submit'));?>
