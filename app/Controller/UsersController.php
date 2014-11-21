@@ -18,6 +18,7 @@ class UsersController extends AppController
 
   public function login() 
   {
+    $this->set('title_for_layout', 'ログイン');
     if($this->request->is('post')){
       //ログイン成功の場合
       if($this->Auth->login()){
@@ -41,6 +42,7 @@ class UsersController extends AppController
 
   public function view($id = null)
   {
+    $this->set('title_for_layout', 'マイページ');
     //ユーザー情報取得
     $this->User->id = $id;
     //$user_id = $this->Auth->user('id');
@@ -76,6 +78,7 @@ class UsersController extends AppController
 
   public function add()
   {
+    $this->set('title_for_layout', '新規登録');
       //ユーザー情報取得
     $users = $this->User->find('all');
     
@@ -114,6 +117,7 @@ class UsersController extends AppController
 
   public function admin($id)
   {
+    $this->set('title_for_layout', 'ユーザーの管理');
     $this->User->id = $id;
     
     //ユーザー情報取得
@@ -182,6 +186,7 @@ class UsersController extends AppController
   }
 
   public function pass($id = null){
+    $this->set('title_for_layout', 'パスワードの変更');
     $id = $this->Auth->user('id');
     $this->User->id = $id;
     if(!$this->User->exists()){
@@ -206,6 +211,7 @@ class UsersController extends AppController
   }
 
   public function name($id = null){
+    $this->set('title_for_layout', '名前の変更');
 
     $id = $this->Auth->user('id');
     $this->User->id = $id;

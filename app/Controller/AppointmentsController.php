@@ -53,6 +53,7 @@ class AppointmentsController extends AppController {
     $this->set('link', $link);
     $this->set('user_id', $user['id']);
     $this->set('name',$user['name']);
+    $this->set('title_for_layout', 'HOME');
 
     $sqlevents = $this->Appointment->query("SELECT appointments.id AS `id`, users.name AS `title`, appointments.date AS `start`, appointments.order AS `order`, users.id AS className FROM appointments, users WHERE appointments.user_id = users.id");
 
@@ -107,7 +108,8 @@ class AppointmentsController extends AppController {
                                       array('date' => $date));
       $this->Appointment->save($this->request->data);
       if($this->Appointment->save($this->request->data)){
-        $this->Session->setFlash('保存されました','default', array('class' => 'flash_success'));
+      $this->Session->setFlash('保存しました', 'default', array('class' => 'flash_success'));
+      $this->redirect(array('controller' => 'appointments', 'action' => 'index'));
       }
       }
     }
@@ -121,6 +123,7 @@ class AppointmentsController extends AppController {
     $this->set('strdate', $date);
     $this->set('link', $link);
     $this->set('strdate', $strdate);
+    $this->set('title_for_layout', '予定追加');
   }
 
   public function delete($id = null){

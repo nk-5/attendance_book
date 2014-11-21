@@ -10,7 +10,7 @@
         <dd>
             <?php echo $name; ?>
         </dd>
-        <dt><?php echo __('E-mail(username)'); ?></dt>
+        <dt><?php echo __('E-mail'); ?></dt>
         <dd>
             <?php echo h($user['username']); ?>
         </dd>
