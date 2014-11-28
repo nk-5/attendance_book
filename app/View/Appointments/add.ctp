@@ -32,14 +32,6 @@
     echo $this->Form->hidden('name', array(
       'value' => $name
     ));
-
-/*
-    echo $this->Form->input('order', array(
-      'type' => 'radio',
-      'value' => 'AM~',
-      'options' => array('AM~' => 'AM~',
-                        'PM~' => 'PM~')
-                      ));*/
 ?>
 <tr>
   <td>
@@ -48,6 +40,7 @@
       'type' => 'text',
       'class' => 'clockpicker',
       'data-autoclose' => 'true',
+      'value' => $cookie_start,
     ));
 ?></td>
   <td>
@@ -55,7 +48,8 @@
     echo $this->Form->input('end',array(
       'type' => 'text',
       'class' => 'clockpicker',
-      'data-autoclose' => 'true'
+      'data-autoclose' => 'true',
+      'value' => $cookie_end,
     ));
 ?></td>
 </tr>

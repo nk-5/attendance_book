@@ -7,7 +7,6 @@ class UsersController extends AppController
     'Appointment',
     'User'
   );
-
   
   public function beforeFilter()
   {
@@ -42,18 +41,16 @@ class UsersController extends AppController
 
   public function view($id = null)
   {
-    $click_user_id = substr("$this->here",28);
     $this->set('title_for_layout', 'マイページ');
     //ユーザー情報取得
     //idをurlから取得
-    $this->User->id = $click_user_id;
+    $this->User->id = $id;
     $tmp_user = $this->User->find('all',array(
       'conditions' => array(
-        'id' => $click_user_id,
+        'id' => $id
       )
     ));
 
-    //$user_id = $this->Auth->user('id');
     //ユーザー名変更をログアウトせずに反映させるためnameだけ別で取る
     //今日の日付を取得
       $strdate = date('Y年m月d日');
@@ -75,7 +72,6 @@ class UsersController extends AppController
     $this->set('appointments', $appo);
     $this->set('user', $this->Auth->user());
     $this->set('tmp_user',$tmp_user);
-    //$this->set('name', $name[0]['User']['name']);
   }
 
   public function add()

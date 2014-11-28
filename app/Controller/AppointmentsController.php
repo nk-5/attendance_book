@@ -1,6 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
-$components = array('Auth', 'Session');
+$components = array('Auth', 'Session', 'Cookie');
 
 class AppointmentsController extends AppController {
   public $uses = array(
@@ -104,7 +104,6 @@ class AppointmentsController extends AppController {
       $username = $this->Auth->user('username');
 
       $post_date = $this->request->data['Appointment']['date'];
-
       $appointments = $this->Appointment->query("SELECT users.id AS `user_id`, users.name AS `name`, users.username AS `username`, appointments.date AS `date` 
         FROM appointments, users
         WHERE appointments.date = \"$post_date\" AND appointments.user_id = \"$user_id\"");
@@ -121,7 +120,10 @@ class AppointmentsController extends AppController {
       else{
       //問題ないなら予約データをSQLに保存
       $data = array('appointments' => array('user_id' => $user_id),
-                                      array('date' => $date));
+        array('date' => $date));
+      //Cookie保存
+      $this->Cookie->write('start', $this->request->data["Appointment"]["start"]);
+      $this->Cookie->write('end', $this->request->data["Appointment"]["end"]);
       $this->Appointment->save($this->request->data);
       if($this->Appointment->save($this->request->data)){
       $this->Session->setFlash('保存しました', 'default', array('class' => 'flash_success'));
@@ -140,6 +142,8 @@ class AppointmentsController extends AppController {
     $this->set('link', $link);
     $this->set('strdate', $strdate);
     $this->set('title_for_layout', '予定追加');
+    $this->set('cookie_start', $this->Cookie->read('start'));
+    $this->set('cookie_end', $this->Cookie->read('end'));
   }
 
   public function delete($id = null){

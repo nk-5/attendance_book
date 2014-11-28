@@ -20,6 +20,9 @@
 .my-events:hover{
   color: black;
 }
+.fc-day-grid-event:hover{
+  color: black;
+}
 
 .fc-widget-content{
   cursor: pointer;

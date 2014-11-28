@@ -4,7 +4,7 @@
     <h2><?php if($user["id"] == $tmp_user[0]["User"]["id"]){
                 echo ('マイページ');}
               else{
-                echo $tmp_user[0]["User"]["name"] . "さんのページ";} ?>
+                echo $tmp_user[0]["User"]["name"] . "さんの予定一覧";} ?>
     </h2>
     <dl id="dl">
         <dt><?php echo __('Id'); ?></dt>
