@@ -1,4 +1,5 @@
 <?php echo  $this->Html->css('appo'); ?>
+<?php    echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');?>
 
 <div class="users view">
     <h2><?php  echo __('管理画面'); ?></h2>

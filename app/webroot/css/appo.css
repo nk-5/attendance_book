@@ -40,3 +40,17 @@ input[type=submit]:hover{
   color: #3a87ad!important;
   border-color: #3a87ad!important;
 }
+
+body{
+  background: #4a87ad;
+}
+
+#header_menu{
+  color: #fff;
+  font-weight: normal;
+}
+
+dt ~ dd{
+  line-height: 2;
+  margin-left: 10em;
+}

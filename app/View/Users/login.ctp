@@ -1,4 +1,5 @@
 <?php echo  $this->Html->css('appo'); ?>
+<?php    echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');?>
 
 <div class="users form">
 	<h2><?php echo __('ログイン'); ?></h2>
@@ -20,6 +21,6 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('ユーザーの追加'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('予定一覧'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('HOME'), array('controller' => 'appointments', 'action' => 'index')); ?> </li>
 	</ul>
 </div>

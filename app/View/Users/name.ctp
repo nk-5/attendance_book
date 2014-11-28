@@ -1,4 +1,5 @@
 <?php echo  $this->Html->css('appo'); ?>
+<?php    echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');?>
 
 <h2><?php echo __('名前の変更'); ?></h2>
 <?php 

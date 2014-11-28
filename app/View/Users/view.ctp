@@ -1,33 +1,38 @@
 <?php echo  $this->Html->css('appo'); ?>
+<?php echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');?>
 <div class="users view">
-    <h2><?php  echo __('マイページ'); ?></h2>
-    <dl>
+    <h2><?php if($user["id"] == $tmp_user[0]["User"]["id"]){
+                echo ('マイページ');}
+              else{
+                echo $tmp_user[0]["User"]["name"] . "さんのページ";} ?>
+    </h2>
+    <dl id="dl">
         <dt><?php echo __('Id'); ?></dt>
         <dd>
-            <?php echo h($user['id']); ?>
+            <?php echo h($tmp_user[0]["User"]["id"]); ?>
         </dd>
         <dt><?php echo __('Name'); ?></dt>
         <dd>
-            <?php echo $name; ?>
+            <?php echo $tmp_user[0]["User"]["name"]; ?>
         </dd>
         <dt><?php echo __('E-mail'); ?></dt>
         <dd>
-            <?php echo h($user['username']); ?>
+            <?php echo h($tmp_user[0]["User"]["username"]); ?>
         </dd>
     </dl>
     <h3>予定リスト</h3>
     <table cellpadding="0" cellspacing="0">
     <tr>
         <th><?php echo __('Date'); ?></th>
-        <th><?php echo __('Orders'); ?></th>
-        <th class="actions"><?php echo __('Actions'); ?></th>
+        <th><?php echo __('Time'); ?></th>
+        <th class="actions"><?php if($user["id"] == $tmp_user[0]["User"]["name"]) echo __('Actions'); ?></th>
     </tr>
 <?php foreach ($appointments as $appointment): ?>
     <tr>
         <td><?php echo h($appointment['Appointment']['date']); ?></td>
-        <td><?php echo h($appointment['Appointment']['order']); ?></td>
+        <td><?php echo h($appointment['Appointment']['start'] . " ~ " . $appointment['Appointment']['end']); ?></td>
         <td class="actions">
-            <?php echo $this->Form->postLink(__('削除'), array('controller' => 'appointments', 'action' => 'delete', $appointment['Appointment']['id']), null, __('本当に削除しますか？', $appointment['Appointment']['id'])); ?>
+            <?php if($user["id"] == $tmp_user[0]["User"]["id"]) echo $this->Form->postLink(__('削除'), array('controller' => 'appointments', 'action' => 'delete', $appointment['Appointment']['id']), null, __('本当に削除しますか？', $appointment['Appointment']['id'])); ?>
         </td>
     </tr>
 <?php endforeach; ?>

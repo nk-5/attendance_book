@@ -23,7 +23,7 @@
 
 /** General Style Info **/
 body {
-	background: #3a87ad;
+	background: #3a87ad !important;
 	color: #fff;
 	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
 	margin: 0;
@@ -41,12 +41,12 @@ a img {
 	border:none;
 }
 h1, h2, h3, h4 {
-	font-weight: normal;
+	font-weight: normal; !important
 	margin-bottom:0.5em;
 }
 h1 {
 	background:#fff;
-	color: #003d4c;
+	color: #003d4c!important;
 	font-size: 100%;
 }
 h2 {
@@ -512,7 +512,7 @@ p.error em {
 input[type=submit],
 .actions ul li a,
 .actions a {
-	font-size: 120%;
+	font-size: 110%;
 	padding: 4px 8px;
 	background: #3a87ad;/*
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#3a87ad));

@@ -39,9 +39,13 @@
     echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.core.js');
     echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.datepicker.js');
     echo $this->Html->css('jquery-ui/css/start/jquery-ui-1.9.2.custom.css');
+    
+
 ?>
 
 </head>
+
+
 <body>
 	<div id="container">
     <div id="header">

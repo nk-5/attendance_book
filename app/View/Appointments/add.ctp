@@ -1,5 +1,10 @@
-<?php echo  $this->Html->css('appo'); ?>
+<?php echo  $this->Html->css('appo'); 
 
+    echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');
+    echo $this->Html->css('clockpicker/dist/bootstrap-clockpicker.min.css');
+    echo $this->Html->script('clockpicker/assets/js/bootstrap.min.js');
+    echo $this->Html->script('clockpicker/dist/bootstrap-clockpicker.min.js');
+?>
 <script type="text/javascript">
      $(function(){
        $('#date').datepicker({
@@ -8,12 +13,14 @@
      });
 </script>
 
+
 <div class="appointments form">
 	<h2><?php echo __('出勤予定の追加'); ?></h2>
 	<?php
 		echo $this->Form->create('Appointment');
     echo '<h3>' . $name . '</h3>';
 ?>
+
 
 <?php
 		echo $this->Form->hidden('user_id', array(
@@ -26,19 +33,53 @@
       'value' => $name
     ));
 
-
+/*
     echo $this->Form->input('order', array(
       'type' => 'radio',
       'value' => 'AM~',
       'options' => array('AM~' => 'AM~',
                         'PM~' => 'PM~')
-                      ));
+                      ));*/
+?>
+<tr>
+  <td>
+<?php
+    echo $this->Form->input('start',array(
+      'type' => 'text',
+      'class' => 'clockpicker',
+      'data-autoclose' => 'true',
+    ));
+?></td>
+  <td>
+<?php
+    echo $this->Form->input('end',array(
+      'type' => 'text',
+      'class' => 'clockpicker',
+      'data-autoclose' => 'true'
+    ));
+?></td>
+</tr>
 
+<script type="text/javascript">
+    $('.clockpicker').clockpicker();
+</script>
+
+<?php
+    if(isset($year) && isset($month) && isset($day)){
+    echo $this->Form->input('date', array(
+      'type' => 'text',
+      'id' => 'date',
+      'value' => $year . "-" . $month . "-" . $day,
+    ));}
+    else{
     echo $this->Form->input('date', array(
       'type' => 'text',
       'id' => 'date',
     ));
+    }
 ?>
+
+
 <div class="submit-button"
 <?php
 		echo $this->Form->end(__('Submit'));

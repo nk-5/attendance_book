@@ -5,30 +5,15 @@ class AppSchema extends CakeSchema {
 		return true;
 	}
 
-  public function after($event = array()) {
-    if(isset($event['create'])){
-      switch ($event['create']){
-      case 'users':
-        App::uses('ClassRegistry','Utility');
-        $user = ClassRegistry::init('User');
-        $user->create();
-        $user->save(
-          array('User' => array(
-            'username' => 'root',
-            'password' => 'root',
-            'name' => '管理者',
-            'admin' => '1'
-          )));
-        break;
-      }
-    }
+	public function after($event = array()) {
 	}
 
 	public $appointments = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'date' => array('type' => 'date', 'null' => false, 'default' => null),
-		'order' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'start' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 20, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'end' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 20, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

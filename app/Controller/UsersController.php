@@ -42,17 +42,19 @@ class UsersController extends AppController
 
   public function view($id = null)
   {
+    $click_user_id = substr("$this->here",28);
     $this->set('title_for_layout', 'マイページ');
     //ユーザー情報取得
-    $this->User->id = $id;
+    //idをurlから取得
+    $this->User->id = $click_user_id;
+    $tmp_user = $this->User->find('all',array(
+      'conditions' => array(
+        'id' => $click_user_id,
+      )
+    ));
+
     //$user_id = $this->Auth->user('id');
     //ユーザー名変更をログアウトせずに反映させるためnameだけ別で取る
-    $name = $this->User->find('all',array(
-      'conditions' => array(
-        'id' => $id,
-      ),
-      'fields' => 'User.name',
-    ));
     //今日の日付を取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
@@ -62,10 +64,9 @@ class UsersController extends AppController
     if(!$this->User->exists()){
       throw new NotFoundException(__('Invalid user'));
     }
-    $user = $this->Auth->user();
     //予約データ取得
     $appo = $this->Appointment->find('all', array(
-      'conditions' => array('user_id' => $user['id'],
+      'conditions' => array('user_id' => $tmp_user[0]["User"]["id"],
                             'date >=' => $date,
                             ),
       'order' => 'date',
@@ -73,7 +74,8 @@ class UsersController extends AppController
     //データ渡し
     $this->set('appointments', $appo);
     $this->set('user', $this->Auth->user());
-    $this->set('name', $name[0]['User']['name']);
+    $this->set('tmp_user',$tmp_user);
+    //$this->set('name', $name[0]['User']['name']);
   }
 
   public function add()
@@ -227,7 +229,6 @@ class UsersController extends AppController
 
       $this->redirect(array('controller' => 'appointments','action' => '' ));
       }
-      
     }
   }
 }

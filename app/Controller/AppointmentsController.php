@@ -55,15 +55,16 @@ class AppointmentsController extends AppController {
     $this->set('name',$user['name']);
     $this->set('title_for_layout', 'HOME');
 
-    $sqlevents = $this->Appointment->query("SELECT appointments.id AS `id`, users.name AS `title`, appointments.date AS `start`, appointments.order AS `order`, users.id AS className FROM appointments, users WHERE appointments.user_id = users.id");
+    $sqlevents = $this->Appointment->query("SELECT appointments.id AS `id`, users.name AS `title`, appointments.date AS `date`, appointments.start AS `start`, appointments.end AS `end`, users.id AS className FROM appointments, users WHERE appointments.user_id = users.id");
 
     $events = array();
     for($a=0; $a<count($sqlevents); $a++){
 
       $events[] = array(
         'id' => $sqlevents[$a]["appointments"]["id"],
-        'title' => $sqlevents[$a]["users"]["title"] . " ". $sqlevents[$a]["appointments"]["order"],
-        'start' => $sqlevents[$a]["appointments"]["start"],
+        'title' => $sqlevents[$a]["users"]["title"],
+        'start' => $sqlevents[$a]["appointments"]["date"] ."T". $sqlevents[$a]["appointments"]["start"],
+        'end' => $sqlevents[$a]["appointments"]["date"] ."T". $sqlevents[$a]["appointments"]["end"],
         'className' => "class" . $sqlevents[$a]["users"]["className"]
       );
     }
@@ -74,6 +75,18 @@ class AppointmentsController extends AppController {
 
   public function add($date_id = null)
   {
+    if(isset($_GET['year'])){
+      $click_year = $_GET['year'];
+      $this->set('year',$click_year);
+    }
+    if(isset($_GET['month'])){
+      $click_month = $_GET['month'];
+      $this->set('month',$click_month);
+    }
+    if(isset($_GET['day'])){
+      $click_day = $_GET['day'];
+      $this->set('day',$click_day);
+    }
     //日付取得
     if($date_id){
       $strdate = date('Y年m月d日', strtotime($date_id));
@@ -101,6 +114,9 @@ class AppointmentsController extends AppController {
         $this->Session->setFlash('重複しています', 'default', array('class' => 'flash_failure'));
       }elseif($this->request->data['Appointment']['date'] == null){
           $this->Session->setFlash('空欄を埋めてください','default',array('class' => 'flash_failure'));
+      }elseif(strtotime($this->request->data['Appointment']['start']) > strtotime($this->request->data['Appointment']['end'])){
+        //start時間がend時間より未来の場合
+        $this->Session->setFlash('開始時刻と終了時刻の順序が正しくありません。確認してください。','default',array('class' => 'flash_failure'));
       }
       else{
       //問題ないなら予約データをSQLに保存
@@ -149,5 +165,4 @@ class AppointmentsController extends AppController {
     if(!$this->Appointment->deleteAll($conditions))
       $this->Session->setFlash('予約データも削除されました','default',array('class' => 'flash_success'));
   }
-
 }
