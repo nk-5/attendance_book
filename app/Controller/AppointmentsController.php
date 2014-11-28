@@ -111,7 +111,7 @@ class AppointmentsController extends AppController {
       //重複がないか確認
       if($appointments){
         $this->Session->setFlash('重複しています', 'default', array('class' => 'flash_failure'));
-      }elseif($this->request->data['Appointment']['date'] == null){
+      }elseif($this->request->data['Appointment']['date'] == null || $this->request->data['Appointment']['start'] == null || $this->request->data['Appointment']['start'] == null){
           $this->Session->setFlash('空欄を埋めてください','default',array('class' => 'flash_failure'));
       }elseif(strtotime($this->request->data['Appointment']['start']) > strtotime($this->request->data['Appointment']['end'])){
         //start時間がend時間より未来の場合
