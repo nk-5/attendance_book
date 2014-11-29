@@ -51,11 +51,9 @@ class UsersController extends AppController
       )
     ));
 
-    //ユーザー名変更をログアウトせずに反映させるためnameだけ別で取る
     //今日の日付を取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
-      $link = date('Ymd');
 
     //例外処理  
     if(!$this->User->exists()){

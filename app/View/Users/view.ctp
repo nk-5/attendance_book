@@ -6,20 +6,15 @@
               else{
                 echo $tmp_user[0]["User"]["name"] . "さんの予定一覧";} ?>
     </h2>
-    <dl id="dl">
-        <dt><?php echo __('Id'); ?></dt>
-        <dd>
-            <?php echo h($tmp_user[0]["User"]["id"]); ?>
-        </dd>
-        <dt><?php echo __('Name'); ?></dt>
-        <dd>
-            <?php echo $tmp_user[0]["User"]["name"]; ?>
-        </dd>
-        <dt><?php echo __('E-mail'); ?></dt>
-        <dd>
-            <?php echo h($tmp_user[0]["User"]["username"]); ?>
-        </dd>
+    <dl>
+      <dt class="my_dt">ID</dt>
+      <dd class="my_dd"><?php echo $tmp_user[0]["User"]["id"]; ?>
+      <dt class="my_dt">Name</dt>
+      <dd class="my_dd"><?php echo $tmp_user[0]["User"]["name"]; ?>
+      <dt class="my_dt">E-mail</dt>
+      <dd class="my_dd"><?php echo $tmp_user[0]["User"]["username"]; ?>
     </dl>
+
     <h3>予定リスト</h3>
     <table cellpadding="0" cellspacing="0">
     <tr>
@@ -32,7 +27,7 @@
         <td><?php echo h($appointment['Appointment']['date']); ?></td>
         <td><?php echo h($appointment['Appointment']['start'] . " ~ " . $appointment['Appointment']['end']); ?></td>
         <td class="actions">
-            <?php if($user["id"] == $tmp_user[0]["User"]["id"]) echo $this->Form->postLink(__('削除'), array('controller' => 'appointments', 'action' => 'delete', $appointment['Appointment']['id']), null, __('本当に削除しますか？', $appointment['Appointment']['id'])); ?>
+            <?php if($user["id"] == $tmp_user[0]["User"]["id"] || $user["admin"] == 1) echo $this->Form->postLink(__('削除'), array('controller' => 'appointments', 'action' => 'delete', $appointment['Appointment']['id']), null, __('本当に削除しますか？', $appointment['Appointment']['id'])); ?>
         </td>
     </tr>
 <?php endforeach; ?>

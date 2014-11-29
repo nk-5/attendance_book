@@ -75,8 +75,8 @@ $(document).ready(function(){
 <div class="actions">
   <h3><?php echo __('Actions'); ?></h3>
   <ul>
-    <li><?php echo $this->Html->link(__('予定の追加'), array('action' => 'add/'.$link)); ?></li>
-    <li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => $page)); ?> </li>
+    <li><?php echo $this->Html->link(__('予定の追加'), array('action' => 'add')); ?></li>
+    <li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => 'view/'.$user["id"])); ?> </li>
     <li><?php echo $this->Html->link(__('ログアウト'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
   </ul>
 </div>

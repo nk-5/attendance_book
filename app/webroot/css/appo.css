@@ -57,3 +57,12 @@ dt ~ dd{
   line-height: 2;
   margin-left: 10em;
 }
+
+.my_dd{
+  background: white;
+  line-height: 2;
+}
+.my_dt{
+  background: white;
+  line-height: 2;
+}

@@ -19,16 +19,9 @@ class AppointmentsController extends AppController {
 
   public function index($date_id = 0)
   {
-    //指定した日付データを取得
-    if($date_id){
-      $strdate = date('Y年m月d日', strtotime($date_id));
-      $date = date('Y-m-d', strtotime($date_id));
-      $link = date('Ymd', strtotime($date_id));
-   }else{
+    //日付データを取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
-      $link = date('Ymd');
-   }
     
     //予約データ取得
     $appo = $this->Appointment->find('all', array(
@@ -37,20 +30,12 @@ class AppointmentsController extends AppController {
       )
     ));
 
-    //ログイン状態チェック
+    //ログイン情報取得
     $user = $this->Auth->user();
-    if(empty($user)){
-      $this->set('str', 'Login');
-      $this->set('page', 'login');
-    }else{
-      $this->set('str', 'MyPage');
-      $this->set('page', 'view/'.$user['id']);
-    }
 
     //データ渡し
     $this->set('appointments', $appo);
     $this->set('strdate', $strdate);
-    $this->set('link', $link);
     $this->set('user_id', $user['id']);
     $this->set('name',$user['name']);
     $this->set('title_for_layout', 'HOME');
@@ -88,15 +73,8 @@ class AppointmentsController extends AppController {
       $this->set('day',$click_day);
     }
     //日付取得
-    if($date_id){
-      $strdate = date('Y年m月d日', strtotime($date_id));
-      $date = date('Y-m-d', strtotime($date_id));
-      $link = date('Ymd', strtotime($date_id));
-    }else{
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
-      $link = date('Ymd');
-    }
     if($this->request->is('post')){
       //ユーザー情報取得
       $user_id = $this->data['Appointment']['user_id'];
@@ -108,11 +86,14 @@ class AppointmentsController extends AppController {
         FROM appointments, users
         WHERE appointments.date = \"$post_date\" AND appointments.user_id = \"$user_id\"");
 
-      //重複がないか確認
+      //問題がないか確認
       if($appointments){
         $this->Session->setFlash('重複しています', 'default', array('class' => 'flash_failure'));
       }elseif($this->request->data['Appointment']['date'] == null || $this->request->data['Appointment']['start'] == null || $this->request->data['Appointment']['start'] == null){
           $this->Session->setFlash('空欄を埋めてください','default',array('class' => 'flash_failure'));
+      }elseif(strtotime(date('Y-m-d')) > strtotime($this->request->data['Appointment']['date'])){
+        //過去への登録禁止
+          $this->Session->setFlash('過去への登録はできません','default',array('class' => 'flash_failure'));
       }elseif(strtotime($this->request->data['Appointment']['start']) > strtotime($this->request->data['Appointment']['end'])){
         //start時間がend時間より未来の場合
         $this->Session->setFlash('開始時刻と終了時刻の順序が正しくありません。確認してください。','default',array('class' => 'flash_failure'));
@@ -137,10 +118,6 @@ class AppointmentsController extends AppController {
     $this->set('user_id',$user['id']);
     $this->set('username', $this->Auth->user('username'));
     $this->set('name', $user['name']);
-    $this->set('date', $date);
-    $this->set('strdate', $date);
-    $this->set('link', $link);
-    $this->set('strdate', $strdate);
     $this->set('title_for_layout', '予定追加');
     $this->set('cookie_start', $this->Cookie->read('start'));
     $this->set('cookie_end', $this->Cookie->read('end'));
@@ -157,8 +134,8 @@ class AppointmentsController extends AppController {
     }
     if($this->Appointment->delete()){
       $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
-      $this->redirect(array('controller' => 'users',
-      'action' => 'view/'.$user['id']));
+      $this->redirect(array('controller' => 'appointments',
+      'action' => 'index'));
     }
     $this->Session->setFlash('削除されました','default',array('class' => 'flash_success'));
   }
