@@ -30,7 +30,7 @@ class AppointmentsController extends AppController {
       )
     ));
 
-    //ログイン情報取得
+    //ログイン状態チェック
     $user = $this->Auth->user();
 
     //データ渡し

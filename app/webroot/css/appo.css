@@ -66,3 +66,6 @@ dt ~ dd{
   background: white;
   line-height: 2;
 }
+.fc-row .fc-content-skeleton td.fc-event-container{
+  background: white;
+}
