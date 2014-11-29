@@ -29,7 +29,7 @@ body .fc { /* extra precedence to overcome jqui */
 .fc-unthemed tbody,
 .fc-unthemed .fc-row,
 .fc-unthemed .fc-popover {
-	border-color: #ddd;
+	border-color: lightgray;
 }
 
 .fc-unthemed .fc-popover {
@@ -392,7 +392,8 @@ temporary rendered events).
 .fc-row .fc-helper-skeleton td {
 	/* see-through to the background below */
 	background: none; /* in case <td>s are globally styled */
-	border-color: transparent;
+	/*border-color: transparent;*/
+  border-color: lightgray;
 
 	/* don't put a border between events and/or the day number */
 	border-bottom: 0;
