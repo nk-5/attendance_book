@@ -74,7 +74,7 @@
 ?>
 
 
-<div class="submit-button"
+<div class="submit-button">
 <?php
 		echo $this->Form->end(__('Submit'));
 ?>

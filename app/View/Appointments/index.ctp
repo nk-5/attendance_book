@@ -8,10 +8,11 @@
 $(document).ready(function(){
   $('#calendar').fullCalendar({
     header: {
-      right: 'month agendaWeek agendaDay',
+      // right: 'month agendaWeek agendaDay',
         right: 'month agendaWeek agendaDay prev,next'
     },
     titleFormat: {
+      // today: 'D日',
       month: 'YYYY年M月',
       week: "YYYY年M月D日",
       day: 'YYYY年M月D日'
@@ -24,10 +25,13 @@ $(document).ready(function(){
     dayNamesShort: ['日','月','火','水','木','金','土'],
 
     buttonText: {
+     // whitebord: 'WBS',
+    // today: '今',
       month: '月',
       week: '週',
       day: '日'
     },
+
     allDaySlot: false,
     //スロットの時間の書式
     axisFormat: 'H:mm',
@@ -78,6 +82,7 @@ $(document).ready(function(){
     <li><?php echo $this->Html->link(__('予定の追加'), array('action' => 'add')); ?></li>
     <li><?php echo $this->Html->link(__('マイページ'), array('controller' => 'users', 'action' => 'view/'.$user["id"])); ?> </li>
     <li><?php echo $this->Html->link(__('ログアウト'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
+    <li><?php echo $this->Html->link(__('WBS'), array('controller' => 'appointments', 'action' => 'whitebord')); ?> </li>
   </ul>
 </div>
 </div>

@@ -90,6 +90,7 @@ class Validation {
 			return false;
 		}
 		return self::_check($check, '/^[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+$/Du');
+		//return self::_check($check, '/^[a-z\d]*$/i');
 	}
 
 /**

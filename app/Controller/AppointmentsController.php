@@ -1,12 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
-$components = array('Auth', 'Session', 'Cookie');
+$components = array('Auth', 'Session', 'Cookie','RequestHandler');
+//public $components = array('Session');
 
 class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
     'User'
   );
+
+public $helpers = array('Html','Form');
 
   public function beforeFilter()
   {
@@ -146,4 +149,89 @@ class AppointmentsController extends AppController {
     if(!$this->Appointment->deleteAll($conditions))
       $this->Session->setFlash('予約データも削除されました','default',array('class' => 'flash_success'));
   }
+
+  public function whitebord(){
+    //日付取得
+      // $strdate = date('Y年m月d日');
+      $date = date('Y-m-d');
+    // if($this->request->is('post')){
+
+      //ユーザー情報取得
+      // $name = $this->Auth->user('name');
+      $login_user_id = $this->Auth->user('id');
+    //  $user_id = $this->User->query("SELECT id FROM users");
+     // $user_name = $this->Appointment->query("SELECT users.id,users.username FROM users");
+      $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
+      $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
+
+      // $appointment_date = $this->Appointment->query("SELECT appointments.user_id,appointments.date FROM appointments");
+      // $appointment_start = $this->Appointment->query("SELECT appointments.user_id,appointments.start FROM appointments");
+
+      //データ渡し
+    // $user = $this->Auth->user();
+    $this->set('login_user_ids',$login_user_id);
+    $this->set('user_names', $this->User->find('all'));
+    $this->set('user_id_counts', $user_id_count);
+    $this->set('param_counts',$param_count);
+    // $this->set('appointment_dates', $appointment_date);
+    // $this->set('appointment_starts', $appointment_start);
+    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('date' => 'asc'))));
+    $this->set('title_for_layout', 'ホワイトボードページ');
+
+  }
+
+
+
+  public function wbsinsert(){
+      $this->autoRender = FALSE;
+         if($this->request->is('ajax')) {
+             // return $data;
+             return $data; 
+         }
+  }
+
+  public function wbsAppoInsert(){
+      $this->autoRender = FALSE;
+         if($this->request->is('ajax')) {
+      // if($this->RequestHandler->isAjax()){
+          if(intval(substr($this->data['start'],0,2)) < 12){
+            $data = '○';
+          }else{
+            $data = '△';
+          }
+     //   var_dump($this->request->data);
+          if($this->Appointment->save($this->request->data)){
+             $this->Session->setFlash('Success!');
+             // $data = "ok";
+            // $this->redirect(array('controller' => 'appointments','action' => 'whitebord'));
+            }
+          else{
+             $this->Session->setFlash('failed!');
+          // exit();
+         }
+        }
+         return $data;
+  }
+
+
+
+  public function wbsAppoDelete(){
+    $this->autoRender = FALSE;
+    if($this->request->is('ajax')){
+    $delete_id = $this->request->data('user_id');
+    $delete_day = $this->request->data('date');
+
+    // if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)
+    if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)) && $this->Appointment->deleteAll(array('Appointment.date' => $delete_day))){
+
+    // }
+
+      // if($this->Appointment->delete($this->request->data('Appointment.date'))){
+          $this->Session->setFlash('Delete Success!');
+      }else{
+           $this->Session->setFlash('Delete failed!');
+      }
+    }
+  }
+
 }
