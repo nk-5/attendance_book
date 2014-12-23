@@ -29,9 +29,9 @@ public $helpers = array('Html','Form','Session');
       $now_days = date('t');
 
     //データ渡し
-    $this->Session->setFlash('1 ~ 10日の予定を追加してください','default',array(),'one');
-    $this->Session->setFlash('11 ~ 20日の予定を追加してください','default',array(),'two');
-    $this->Session->setFlash('21 ~ '.$now_days.'の予定を追加してください','default',array(),'three');
+    $this->Session->setFlash('1 ~ 10日の予定が追加されている必要があります','default',array('class' => 'success'),'one');
+    $this->Session->setFlash('11 ~ 20日の予定が追加されている必要があります','default',array('class' => 'success'),'two');
+    $this->Session->setFlash('21 ~ '.$now_days.'の予定が追加されている必要があります','default',array('class' => 'success'),'three');
 
     
     //予約データ取得
@@ -175,9 +175,9 @@ public $helpers = array('Html','Form','Session');
 
 
       //データ渡し
-    $this->Session->setFlash('1 ~ 10日の予定を追加してください','default',array(),'one');
-    $this->Session->setFlash('11 ~ 20日の予定を追加してください','default',array(),'two');
-    $this->Session->setFlash('21 ~ '.$now_days.'の予定を追加してください','default',array(),'three');
+    $this->Session->setFlash('1 ~ 10日の予定が追加されている必要があります','default',array('class' => 'success'),'one');
+    $this->Session->setFlash('11 ~ 20日の予定が追加されている必要があります','default',array('class' => 'success'),'two');
+    $this->Session->setFlash('21 ~ '.$now_days.'の予定が追加されている必要があります','default',array('class' => 'success'),'three');
 
     // $user = $this->Auth->user();
     $this->set('login_user_ids',$login_user_id);
