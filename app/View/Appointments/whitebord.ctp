@@ -1,57 +1,110 @@
+<?php echo  $this->Html->css('appo'); 
+    echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');
+    echo $this->Html->css('clockpicker/dist/bootstrap-clockpicker.min.css');
+    echo $this->Html->script('clockpicker/assets/js/bootstrap.min.js');
+    echo $this->Html->script('clockpicker/dist/bootstrap-clockpicker.min.js');
+?>
+
+<?php
+
+ $ym = isset($_GET['ym']) ? $_GET['ym'] : date('Y-m');
+
+  $time_stamp = strtotime($ym . "-01");
+
+  if($time_stamp === false){
+    $time_stamp = time();
+  }
+
+    // $time_stamp = mktime(0,0,0,date('m')-1,date('d'),date('Y'));
+    $today      = date('d');
+    $now_date   = date('Y-m-t',$time_stamp);
+    $now_days   = date('t',$time_stamp);
+    $now_month  = date('m',$time_stamp);
+    $now_year   = date('Y',$time_stamp);
+    $youbi_suti = date("w",mktime(0,0,0,date("m",$time_stamp),1,date("Y",$time_stamp)));//数値（日曜=0）
+    $youbi = array('0' => '日','1' => '月','2' => '火','3' => '水','4' => '木','5' => '金','6' => '土');
+
+    $prev = date('Y-m',mktime(0,0,0,date('m',$time_stamp)-1,1,date('Y',$time_stamp)));
+    $next = date('Y-m',mktime(0,0,0,date('m',$time_stamp)+1,1,date('Y',$time_stamp)));
+?>
+
+
 <html>
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Whiteboard Page</title>
-    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
   </head>
 
+
 <body>
-  <h2><?php echo ('出勤予定表 ~White Board Style~'); ?></h2>
+  <h2 position="center"><?php echo ('出勤予定表 ~White Board Style~'); ?></h2>
+  <!--予定追加のメッセージ-->
+    <?php 
+      if($today <= 10){
+        echo $this->Session->flash('two');  
+      }elseif($today > 10 && $today <= 20){
+        echo $this->Session->flash('three');  
+      }elseif($today > 20 &&  $today <= $now_days){
+        echo $this->Session->flash('one');   
+      }
+
+    ?>
+
+    <!-- <div id="flashMessage" class="message">予定を追加してください</div> -->
     <div class="container" style="padding:20px 0">
      <form class="form-inline" style="margin-bottom:15px">
           <div class="form-group"><!--has-error-->
             <label for="in-time">出勤時間</label>
             <div>
-              <input type="text" size="5" id="in_time" class="form-control" value="9:00">
+              <input type="text" size="5" id="in_time" class="clockpicker" data-autoclose="true" value="09:00">
             </div>
           </div>
           <div class="form-group"><!--has-error-->
             <label  for="out-time">退勤時間</label>
             <div>
-              <input type="text" size="5" id="out_time" class="form-control" value="18:00">
+              <input type="text" size="5" id="out_time" class="clockpicker" data-autoclose="true" value="18:00">
             </div>
           </div>
-         
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button type="button" class="btn btn-danger" id="delete">予定の削除</button> 
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <div class="btn-group"> 
-  <p><strong>NOW MODE</strong></p>
-     <button type="button" class="btn btn-primary" id="now_insert">INSERT</button> 
-     <button type="button" class="btn btn-default active" id="now_delete">DELETE</button> 
-   </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="form-group"><!--has-error-->
+            <button type="button" id="operation" class="btn btn-primary">操作方法</button>
+          </div>
 
+          <div class="form-group">
+            <div  id="process">
+              <p>クリック = 予定の追加</p>
+              <p>ダブルクリック = 予定の削除</p>
+              <p>※操作は現在の日にちより上の予定にしか出来ません。</p>
+            </div>
+          </div>
     </form>
    </div>
+
+
+      <span class="container" style="padding:20px 0" class="row">
+        <span class="col-sm-2"></span>
+        <a href="?ym=<?php echo $prev; ?>"><button type="button" id="prev" class="btn btn-success col-sm-1"><i class="glyphicon glyphicon-chevron-left"></i> 前月</button></a>
+
+        <span class="col-sm-2"></span>
+        <span class="col-sm-2"></span>
+        <span class="col-sm-2"></span>
+
+        <a href="?ym=<?php echo $next; ?>"><button type="button" id="next" class="btn btn-success col-sm-1">翌月<i class="glyphicon glyphicon-chevron-right"></i></button></a>
+        <span class="col-sm-2"></span>
+      </span>
+
+
   <div class="container" style="padding:20px 0">
   <table class="table table-striped table-bordered table-hover">
 
   <div>
-
     <thead>
-        <?php 
-          $time_stamp = time();
-          $now_days = date('t');
-          $now_month  = date('m');
-          $now_year   = date('Y');
-          $youbi_suti = date("w",mktime(0,0,0,date("m",$time_stamp),1,date("Y",$time_stamp)));//数値（日曜=0）
-          $youbi = array('0' => '日','1' => '月','2' => '火','3' => '水','4' => '木','5' => '金','6' => '土');
-          
+        <?php       
           //年と曜日の出力
           echo "<tr>";
-          echo "<th>".$now_year."年"."</th>"; 
+          echo "<th size=20px>".$now_year."年"."</th>"; 
           for($i=0;$i<$now_days;$i++){
             if($youbi_suti == 0){
               echo "<th style=color:red>".$youbi[$youbi_suti]."</th>";
@@ -75,139 +128,182 @@
           }
           echo "</tr>";
         ?>
-      <tbody>
 
-     
-      <?php
+      <tbody>
+       <?php
           $param_su = 0;  //パラメータ数
 
-               // debug($appointment_params);
+          $user_id = $login_user_ids;//tdに入れるログインユーザーのid
+    
+      //ログインユーザー出勤管理表出力
+          echo "<tr class=info>";
+          echo "<td>".h($user_names[$login_user_ids -1]['User']['username'])."</td>";
 
-          foreach ($user_names as $user_name){
-          // debug($user_name);
-
-            $style = $user_name['User']['id'] % 2;
-
-            if($login_user_ids == $user_name['User']['id']){
-              echo "<tr class=info>";
-            }else if($style == 0){
-              echo "<tr class=warning>";
-            }
-            else{
-              echo "<tr>";
-            }
-            //ユーザー名の出力
-              $user_id = $user_name['User']['id'];
-            if($login_user_ids == $user_name['User']['id']){
-              echo "<td>".h($user_name['User']['username'])."</td>";
-            }else{
-              echo "<td>".h($user_name['User']['username'])."</td>";
-            }
-
-            //ログインユーザーの出勤管理の出力
-           // debug($now_month);
-           // debug(intval(substr($appointment_params[$param_su]['Appointment']['date'],-5,2)));
-
-            for($i = 1;$i<32; $i++){
-            // debug($param_su);
-            // debug($param_counts['0']['0']['COUNT(id)']);
-
-           // debug(substr($appointment_params[$param_su]['Appointment']['date'],-5,2));
-             // debug(intval(substr($appointment_params[$param_su]['Appointment']['date'],-5,2)));
-              if($login_user_ids == $user_name['User']['id']){
-                  if($param_su != $param_counts['0']['0']['COUNT(id)']){
-                    if($now_month == substr($appointment_params[$param_su]['Appointment']['date'],-5,2)){
-                      if($user_name['User']['id'] == $appointment_params[$param_su]['Appointment']['user_id'] && $i == intval(substr($appointment_params[$param_su]['Appointment']['date'],-2,2))){
-                        if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) < 12){
-
-                          echo"<td style=color:red  class=login_user data-date=$now_year.$now_month.$i id=$user_id>"."○"."</td>";
-                          $param_su++;
-
-                        }else if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) >= 12){
-                          echo"<td style=color:green class=login_user data-date=$now_year.$now_month.$i id=$user_id>"." △"."</td>";
-                          $param_su++;
-                        }
-                      }else{
-                        echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";
-                      }     
-                    }else{
+          for($i = 1;$i<$now_days+1; $i++){
+            if($param_su != $login_user_param_count[0][0]['COUNT(user_id)']){
+              if($now_year == intval(substr($login_user_params[$param_su]['appointments']['date'],0,4))){
+                if($now_month == intval(substr($login_user_params[$param_su]['appointments']['date'],-5,2))){
+                  if($i == intval(substr($login_user_params[$param_su]['appointments']['date'],-2,2))){
+                    if(intval(substr($login_user_params[$param_su]['appointments']['start'],0,2)) < 12){
+                      echo"<td style=color:red;cursor:pointer;  class=login_user data-date=$now_year.$now_month.$i id=$user_id>"."○"."</td>";
                       $param_su++;
-                      $i = 0;
+                    }else if(intval(substr($login_user_params[$param_su]['appointments']['start'],0,2)) >= 12){
+                      echo"<td style=color:green;cursor:pointer; class=login_user data-date=$now_year.$now_month.$i id=$user_id style=cursor:pointer;>"." △"."</td>";
+                      $param_su++;
                     }
+
                   }else{
-                    echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";
+                    echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id style=cursor:pointer;>"." "."</td>";
                   }
-              }
-            //他ユーザーの出勤管理の出力
-              if($login_user_ids != $user_name['User']['id']){
-                if($param_su != $param_counts['0']['0']['COUNT(id)']){
-                  if($now_month == intval(substr($appointment_params[$param_su]['Appointment']['date'],-5,2))){
-                    if($user_name['User']['id'] == $appointment_params[$param_su]['Appointment']['user_id'] && $i == intval(substr($appointment_params[$param_su]['Appointment']['date'],-2,2))){
-                      if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) < 12){
-                        echo"<td style=color:red data-date=$now_year.$now_month.$i id=$user_id>"." ○"."</td>";
-                        $param_su++;             
-                  
-                      }else if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) >= 12){
-                        echo"<td style=color:green data-date=$now_year.$now_month.$i id=$user_id>"." △"."</td>";
-                        $param_su++;
-                      }
-                    }else{
-                    echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>"; 
-                    }
-                  }else{
-                    $param_su++;
-                  }
+
                 }else{
-                        echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";     
-                      }
+                  if($login_user_params[$param_su]['appointments']['date'] < $now_date){
+                    $i = 0;
+                  }else if($login_user_params[$param_su]['appointments']['date'] > $now_date){
+                    echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id style=cursor:pointer>"." "."</td>";
+                  }
+                  $param_su++;
+                }
+
+              }else{
+                if($login_user_params[$param_su]['appointments']['date'] < $now_date){
+                  $i = 0;
+                }else if($login_user_params[$param_su]['appointments']['date'] > $now_date){
+                  echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id style=cursor:pointer>"." "."</td>";
+                }
+                $param_su++;
+
               }
+            }else{
+                    echo"<td class=login_user data-date=$now_year.$now_month.$i id=$user_id style=cursor:pointer;>"." "."</td>";
             }
           }
-            echo "</tr>";
-            // debug($user_id);
-        ?>
+          echo "</tr>";
+          
+
+      //他ユーザーの出勤管理の出力
+          $param_su = 0;
+
+          foreach ($user_names as $user_name){
+            if($login_user_ids != $user_name['User']['id']){
+              $style = $user_name['User']['id'] % 2;
+
+              if($style == 0){
+                echo "<tr class=warning>";
+              }
+              else{
+                echo "<tr>";
+              }
+
+            $user_id = $user_name['User']['id'];//tdに入れるユーザーのid
+
+            //ユーザー名の出力
+            if($login_user_ids != $user_name['User']['id']){
+              echo "<td>".h($user_name['User']['username'])."</td>";
+            }
+          
+            for($i = 1;$i<$now_days+1; $i++){
+              if($param_su != intval($param_counts['0']['0']['COUNT(id)'])){
+                if($appointment_params[$param_su]['Appointment']['user_id'] == $user_name['User']['id']){
+                  if($now_year == intval(substr($appointment_params[$param_su]['Appointment']['date'],0,4))){
+                    if($now_month == intval(substr($appointment_params[$param_su]['Appointment']['date'],-5,2))){
+                      if($i == intval(substr($appointment_params[$param_su]['Appointment']['date'],-2,2))){
+                        if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) < 12){
+                          echo"<td style=color:red data-date=$now_year.$now_month.$i id=$user_id>"." ○"."</td>";
+                          $param_su++;             
+                  
+                         }else if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) >= 12){
+                           echo"<td style=color:green data-date=$now_year.$now_month.$i id=$user_id>"." △"."</td>";
+                           $param_su++;
+                          }
+
+                      }else{
+                        echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>"; 
+                      }
+                    
+                    }else{
+                     if($appointment_params[$param_su]['Appointment']['date'] < $now_date){
+                       $i = 0;
+                     }else if($appointment_params[$param_su]['Appointment']['date'] > $now_date){
+                      echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";     
+                     }
+                     $param_su++;     
+                  }
+                
+                }else{
+                  if($appointment_params[$param_su]['Appointment']['date'] < $now_date){
+                    $i = 0;
+                  }else if($appointment_params[$param_su]['Appointment']['date'] > $now_date){
+                    echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";     
+                  }
+                  $param_su++;    
+                }
+              
+              }else{
+                if($appointment_params[$param_su]['Appointment']['user_id'] < $user_name['User']['id']){ 
+                  $param_su++;   
+                 $i = 0;
+                }
+
+                if($i<$now_days+1 && $appointment_params[$param_su]['Appointment']['user_id'] > $user_name['User']['id']){
+                   echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>"; 
+                }
+             }
+            
+          }else{
+            echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";          
+          }
+        }
+       }
+       //ログインユーザー分の予約数を増やす
+      if($login_user_ids == $user_name['User']['id']){
+        $param_su = $param_su + intval($login_user_param_count[0][0]['COUNT(user_id)']);
+      }
+    }
+    echo "</tr>";
+?>
 
           </tbody>
         </thead>
     </table>
     </div>
 
-
-<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> -->  
- <!-- // <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script> -->
     <script>
       $(function(){
-              var day = new Date();
-              var now_day = day.getDate();
 
-                    // $('.login_user').click(function(){
-                  // $('.login_user').one('click',insert);
+        $('.clockpicker').clockpicker();
+
+              var date = new Date();
+              var now_day   = date.getDate();
+              var now_month = date.getMonth()+1;
+              var now_year  = date.getFullYear();
+              var now_date = String(now_year)+"."+String(now_month)+"."+String(now_day);
+              Number(now_date);
+
                   $('.login_user').on('click',function(){
                     if($(this).html() != "○" && $(this).html() != "△"){
                       // function insert(){
                       var in_time     = $('#in_time').val();
                       var out_time    = $('#out_time').val();
-                       console.log(now_day);
                        $appoint_day_elem = $(this);
                        var login_user = $appoint_day_elem.attr('id');
                        var appo_days = $appoint_day_elem.attr("data-date");
-                       console.log(appo_days);
-                       console.log(in_time);
-                       if(appo_days.substr(8,2) > now_day){
-                       // console.log(login_user);
-                      if(in_time.length == 4){
-                        if(in_time.substr(0,1) < 12){
-                          var time_data = '○';          
-                        }
-                      }
+                       var appo_time = Date.parse(appo_days);
+                       var now_time = Date.parse(date);
+                       console.log(appo_time);
+                       console.log(now_time);
+                       console.log(appo_days.substr(8,2));
+                       console.log(now_date);
 
-                      if(in_time.length == 5){
-                        if(in_time.substr(0,2) < 12){
-                          var time_data = '○';          
-                        }else{
-                          var time_data = '△';
-                        }
-                      }
+
+                       if(appo_time > now_time){
+                
+                          if(in_time.substr(0,2) < 12){
+                            var time_data = '○';          
+                          }else{
+                            var time_data = '△';
+                          }
+                      
 
                       if(time_data == '○'){
                         $(this).html(time_data),$(this).css('color','red');                      
@@ -229,15 +325,9 @@
                         contentType: "application/json",
                         // dataType: "text",
                         data: JSON.stringify(param),
-                        //    "user_id": login_user, 
-                        //    "date": appo_days,
-                        //    "start": in_time,
-                        //    "end": out_time
-                         // }),
+
                         success: function(){
-                           // console.log(data);
-                           alert("success");
-                          // debug($this->request->data);
+                           // alert("success");
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown){
                           console.log(XMLHttpRequest); // XMLHttpRequestオブジェクト
@@ -247,32 +337,21 @@
                         }
                       });//ajax2  
                     }//if(appo_days > now_day)
-                  // });//.login_user.click function
-                 }
+                   }
                });
            
               
 
           //出勤予定の削除処理
-          // $('#delete').click(function(){
-
-            // var now_day = day.getDate();
-            // $('#now_insert').removeClass('btn btn-primary').addClass('btn btn-default active');
-            // $('#now_delete').removeClass('btn btn-default active').addClass('btn btn-danger');
-
              $('.login_user').dblclick(function(){
-             // $('.login_user').on('click',del);
-              // $('.login_user').off('click',insert);
-             // function del(){ 
+
                $appoint_day_elem = $(this);
                var login_user = $appoint_day_elem.attr('id');
                var appo_days = $appoint_day_elem.attr("data-date");
               if(appo_days.substr(8,2) > now_day){
                 if($(this).html() == "○" || $(this).html() == "△"){
                   $(this).html(" ");
-                  // $(this).remove(html("○")); 
                 var param = {
-                           // "user_id": login_user, 
                            "date": appo_days
                       };                     
 
@@ -284,9 +363,7 @@
                         // dataType: "text",
                         data: JSON.stringify(param),
                         success: function(){
-                           // console.log(data);
-                           alert("削除しました");
-                  // debug($this->request->data);
+                           // alert("削除しました");
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown){
                           console.log(XMLHttpRequest); // XMLHttpRequestオブジェクト
@@ -301,16 +378,10 @@
                // }
           // });//delete.click fuction
 
-
-        //モード変更処理
-          $('.form-group').mouseover(function(){
-            $('#now_insert').removeClass('btn btn-default active').addClass('btn btn-primary');
-            $('#now_delete').removeClass('btn btn-danger').addClass('btn btn-default active');
-               // $('.login_user').off('click',del);         
-                 $('.login_user').change(function(){
-                  alert("change");
-                  // $('.login_user').on('click',insert);
-                 });
+          //操作説明処理
+          $('#process').hide();
+          $('#operation').click(function(){
+            $('#process').toggle();
           });
 
       });//一番最後

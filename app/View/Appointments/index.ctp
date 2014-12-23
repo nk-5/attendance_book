@@ -1,7 +1,25 @@
 <?php echo  $this->Html->css('appo'); ?>
 <?php echo $this->Html->css('clockpicker/assets/css/bootstrap.min.css');?>
      
+
+
+ <!--予定追加のメッセージ-->
+    <?php 
+
+     $today      = date('d');
+     $now_days   = date('t');
+
+      if($today <= 10){
+        echo $this->Session->flash('two');  
+      }elseif($today > 10 && $today <= 20){
+        echo $this->Session->flash('three');  
+      }elseif($today > 20 &&  $today <= $now_days){
+        echo $this->Session->flash('one');   
+      }
+    ?>
+
 <div id='calendar'></div>
+
 
 <script type="text/javascript">
 

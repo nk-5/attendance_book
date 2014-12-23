@@ -39,7 +39,7 @@
     echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.core.js');
     echo $this->Html->script('jquery-ui/development-bundle/ui/jquery.ui.datepicker.js');
     echo $this->Html->css('jquery-ui/css/start/jquery-ui-1.9.2.custom.css');
-    echo $this->Html->css('bootstrap.min.css');
+    // echo $this->Html->css('bootstrap.min.css');
     // echo $this->Html->script('http://code.jquery.com/jquery-1.11.0.min.js');   
     
 
@@ -58,7 +58,7 @@
           echo " | ";
           echo $this->Html->link('予定追加','/appointments/add');
           echo " | ";
-          echo $this->Html->link('HOME','/appointments');
+          echo $this->Html->link('CS','/appointments');
           echo " | ";
           echo $this->Html->link('WBS','/appointments/whitebord');
         else:

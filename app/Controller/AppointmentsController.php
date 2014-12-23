@@ -3,13 +3,14 @@ App::uses('AppController', 'Controller');
 $components = array('Auth', 'Session', 'Cookie','RequestHandler');
 //public $components = array('Session');
 
+
 class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
     'User'
   );
 
-public $helpers = array('Html','Form');
+public $helpers = array('Html','Form','Session');
 
   public function beforeFilter()
   {
@@ -25,6 +26,13 @@ public $helpers = array('Html','Form');
     //日付データを取得
       $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
+      $now_days = date('t');
+
+    //データ渡し
+    $this->Session->setFlash('1 ~ 10日の予定を追加してください','default',array(),'one');
+    $this->Session->setFlash('11 ~ 20日の予定を追加してください','default',array(),'two');
+    $this->Session->setFlash('21 ~ '.$now_days.'の予定を追加してください','default',array(),'three');
+
     
     //予約データ取得
     $appo = $this->Appointment->find('all', array(
@@ -152,43 +160,50 @@ public $helpers = array('Html','Form');
 
   public function whitebord(){
     //日付取得
-      // $strdate = date('Y年m月d日');
       $date = date('Y-m-d');
-    // if($this->request->is('post')){
+      $now_days = date('t');
 
       //ユーザー情報取得
-      // $name = $this->Auth->user('name');
       $login_user_id = $this->Auth->user('id');
-    //  $user_id = $this->User->query("SELECT id FROM users");
-     // $user_name = $this->Appointment->query("SELECT users.id,users.username FROM users");
+      $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
+      $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
       $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
       $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
 
       // $appointment_date = $this->Appointment->query("SELECT appointments.user_id,appointments.date FROM appointments");
       // $appointment_start = $this->Appointment->query("SELECT appointments.user_id,appointments.start FROM appointments");
 
+
       //データ渡し
+    $this->Session->setFlash('1 ~ 10日の予定を追加してください','default',array(),'one');
+    $this->Session->setFlash('11 ~ 20日の予定を追加してください','default',array(),'two');
+    $this->Session->setFlash('21 ~ '.$now_days.'の予定を追加してください','default',array(),'three');
+
     // $user = $this->Auth->user();
     $this->set('login_user_ids',$login_user_id);
+    $this->set('login_user_params',$login_user_param);
+    $this->set('login_user_param_count',$login_user_param_count);
+
+
     $this->set('user_names', $this->User->find('all'));
     $this->set('user_id_counts', $user_id_count);
     $this->set('param_counts',$param_count);
     // $this->set('appointment_dates', $appointment_date);
     // $this->set('appointment_starts', $appointment_start);
-    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('date' => 'asc'))));
+    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
     $this->set('title_for_layout', 'ホワイトボードページ');
 
   }
 
 
 
-  public function wbsinsert(){
-      $this->autoRender = FALSE;
-         if($this->request->is('ajax')) {
-             // return $data;
-             return $data; 
-         }
-  }
+  // public function wbsinsert(){
+  //     $this->autoRender = FALSE;
+  //        if($this->request->is('ajax')) {
+  //            // return $data;
+  //            return $data; 
+  //        }
+  // }
 
   public function wbsAppoInsert(){
       $this->autoRender = FALSE;
@@ -201,7 +216,7 @@ public $helpers = array('Html','Form');
           }
      //   var_dump($this->request->data);
           if($this->Appointment->save($this->request->data)){
-             $this->Session->setFlash('Success!');
+             // $this->Session->setFlash('Success!');
              // $data = "ok";
             // $this->redirect(array('controller' => 'appointments','action' => 'whitebord'));
             }
@@ -227,11 +242,62 @@ public $helpers = array('Html','Form');
     // }
 
       // if($this->Appointment->delete($this->request->data('Appointment.date'))){
-          $this->Session->setFlash('Delete Success!');
+          // $this->Session->setFlash('Delete Success!');
       }else{
            $this->Session->setFlash('Delete failed!');
       }
     }
+  }
+
+  public function whitebord_prev(){
+     //日付取得
+           $date = date('Y-m-d');
+      //ユーザー情報取得
+      // $name = $this->Auth->user('name');
+      $login_user_id = $this->Auth->user('id');
+      $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
+      $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
+      $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
+      $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
+
+      //データ渡し
+    // $user = $this->Auth->user();
+    $this->set('login_user_ids',$login_user_id);
+    $this->set('login_user_params',$login_user_param);
+    $this->set('login_user_param_count',$login_user_param_count);
+
+
+    $this->set('user_names', $this->User->find('all'));
+    $this->set('user_id_counts', $user_id_count);
+    $this->set('param_counts',$param_count);
+    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
+    $this->set('title_for_layout', 'WBS前月');
+
+  }
+
+    public function whitebord_next(){
+     //日付取得
+      $date = date('Y-m-d');
+      //ユーザー情報取得
+      $login_user_id = $this->Auth->user('id');
+      $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
+      $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
+      $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
+      $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
+
+      //データ渡し
+
+    $this->set('login_user_ids',$login_user_id);
+    $this->set('login_user_params',$login_user_param);
+    $this->set('login_user_param_count',$login_user_param_count);
+
+
+    $this->set('user_names', $this->User->find('all'));
+    $this->set('user_id_counts', $user_id_count);
+    $this->set('param_counts',$param_count);
+    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
+    $this->set('title_for_layout', 'WBS翌月');
+
   }
 
 }
