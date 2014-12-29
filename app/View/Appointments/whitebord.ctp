@@ -15,7 +15,6 @@
     $time_stamp = time();
   }
 
-    // $time_stamp = mktime(0,0,0,date('m')-1,date('d'),date('Y'));
     $today      = date('d');
     $now_date   = date('Y-m-t',$time_stamp);
     $now_days   = date('t',$time_stamp);
@@ -28,18 +27,23 @@
     $next = date('Y-m',mktime(0,0,0,date('m',$time_stamp)+1,1,date('Y',$time_stamp)));
 ?>
 
-
 <html>
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Whiteboard Page</title>
+    <style type="text/css">
+      .container{
+        display: inline;
+      }
+    </style>
   </head>
 
 
 <body>
   <h2 position="center"><?php echo ('出勤予定表 ~White Board Style~'); ?></h2>
+
   <!--予定追加のメッセージ-->
     <?php 
       if($today <= 10){
@@ -49,61 +53,70 @@
       }elseif($today > 20 &&  $today <= $now_days){
         echo $this->Session->flash('one');   
       }
-
     ?>
 
-    <!-- <div id="flashMessage" class="message">予定を追加してください</div> -->
-    <div class="container" style="padding:20px 0">
-     <form class="form-inline" style="margin-bottom:15px">
-          <div class="form-group"><!--has-error-->
+<!--予定時間フォーム-->
+  <div class="container" style="padding:20px;">
+    <span style="float:left;">
+     <form class="form-inline" style="width:700px;">
+          <div class="form-group">
             <label for="in-time">出勤時間</label>
             <div>
               <input type="text" size="5" id="in_time" class="clockpicker" data-autoclose="true" value="09:00">
             </div>
           </div>
-          <div class="form-group"><!--has-error-->
+          <div class="form-group">
             <label  for="out-time">退勤時間</label>
             <div>
               <input type="text" size="5" id="out_time" class="clockpicker" data-autoclose="true" value="18:00">
             </div>
           </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <div class="form-group"><!--has-error-->
-            <button type="button" id="operation" class="btn btn-primary">操作方法</button>
-          </div>
-
           <div class="form-group">
-            <div  id="process">
+            <button type="button" id="operation" class="btn btn-primary">操作方法</button>
+         </div>
+
+          <span class="form-group"> 
+            <span id="process">
               <p>クリック = 予定の追加</p>
               <p>ダブルクリック = 予定の削除</p>
               <p>※操作は現在の日にちより上の予定にしか出来ません。</p>
-            </div>
-          </div>
-    </form>
-   </div>
+            </span>
+          </span>
+     </form>
+    </span>
 
+    <span style="float:right; margin-right:300px;">
+      <?php 
+        echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
+        echo $this->Form->input( 'image', array( 'type' => 'file','style' => 'float:left;'));
+        echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
+        echo $this->Form->end(); 
+      ?>
+    </span>
+  </div>
+<br><br><br>
 
-      <span class="container" style="padding:20px 0" class="row">
+      <span class="container" style="padding:20px 0;" class="row">
         <span class="col-sm-2"></span>
-        <a href="?ym=<?php echo $prev; ?>"><button type="button" id="prev" class="btn btn-success col-sm-1"><i class="glyphicon glyphicon-chevron-left"></i> 前月</button></a>
-
-        <span class="col-sm-2"></span>
+         <a href="?ym=<?php echo $prev; ?>"><button type="button" id="prev" class="btn btn-success col-sm-1"><i class="glyphicon glyphicon-chevron-left"></i> 前月</button></a>
         <span class="col-sm-2"></span>
         <span class="col-sm-2"></span>
-
+        <span class="col-sm-2"></span>
         <a href="?ym=<?php echo $next; ?>"><button type="button" id="next" class="btn btn-success col-sm-1">翌月<i class="glyphicon glyphicon-chevron-right"></i></button></a>
         <span class="col-sm-2"></span>
       </span>
 
 
   <div class="container" style="padding:20px 0">
-  <table class="table table-striped table-bordered table-hover">
+    <table class="table table-striped table-bordered table-hover">
+    <div>
+      <thead>
+        <?php   
 
-  <div>
-    <thead>
-        <?php       
+        // debug(realpath("../")."/Controller/appointments/wbsAppoInsert");
           //年と曜日の出力
           echo "<tr>";
+          echo "<th size=36px></th>";
           echo "<th size=20px>".$now_year."年"."</th>"; 
           for($i=0;$i<$now_days;$i++){
             if($youbi_suti == 0){
@@ -122,6 +135,7 @@
 
           //月と日にちの出力
           echo "<tr>";
+          echo "<th size=36px></th>";
           echo "<th>".$now_month."月"."</th>"; 
           for($i=1;$i<$now_days+1;$i++){
             echo "<th>".$i."</th>";
@@ -131,13 +145,24 @@
 
       <tbody>
        <?php
-          $param_su = 0;  //パラメータ数
-
+          $param_su = 0;  //予約パラメータ数
           $user_id = $login_user_ids;//tdに入れるログインユーザーのid
     
       //ログインユーザー出勤管理表出力
           echo "<tr class=info>";
-          echo "<td>".h($user_names[$login_user_ids -1]['User']['username'])."</td>";
+
+      //アイコン画像の出力  テーブルにデータがなかったらNO IMAGE
+        if($image_param_su[0][0]['COUNT(user_id)'] == 0){
+          echo "<td size=36px><img src=../app/webroot/img/images/user_icon_noimage.gif></td>";
+        }
+        elseif($login_user_image_params  != null){
+          echo "<td size=36px><img src=contents/{$login_user_image_params[0]['images']['filename']}></td>";
+        }else{
+          echo "<td size=36px><img src=../app/webroot/img/images/user_icon_noimage.gif></td>";
+        }
+
+
+          echo "<td size=20px>".h($user_names[$login_user_ids -1]['User']['username'])."</td>";
 
           for($i = 1;$i<$now_days+1; $i++){
             if($param_su != $login_user_param_count[0][0]['COUNT(user_id)']){
@@ -179,8 +204,7 @@
             }
           }
           echo "</tr>";
-          
-
+      
       //他ユーザーの出勤管理の出力
           $param_su = 0;
 
@@ -196,6 +220,20 @@
               }
 
             $user_id = $user_name['User']['id'];//tdに入れるユーザーのid
+
+         //アイコン画像の出力
+          if($image_param_su[0][0]['COUNT(user_id)'] != 0){
+            for($i = 0;$i < $image_param_su[0][0]['COUNT(user_id)'];$i++){
+              if($image_params[$i]['Image']['user_id'] == $user_name['User']['id']){
+                echo "<td size=36px><img src=contents/{$image_params[$i]['Image']['filename']}></td>";  
+                break;
+              }
+            }
+          }
+          //テーブルにデータがなかったらNO IMAGE
+          if($image_param_su[0][0]['COUNT(user_id)'] == 0 || $i == $image_param_su[0][0]['COUNT(user_id)']){
+            echo "<td size=36px><img src=../app/webroot/img/images/user_icon_noimage.gif></td>";
+          }
 
             //ユーザー名の出力
             if($login_user_ids != $user_name['User']['id']){
@@ -255,7 +293,7 @@
           }
         }
        }
-       //ログインユーザー分の予約数を増やす
+       //ログインユーザー分の予約数を増やす & アイコン数を増やす
       if($login_user_ids == $user_name['User']['id']){
         $param_su = $param_su + intval($login_user_param_count[0][0]['COUNT(user_id)']);
       }
@@ -266,10 +304,33 @@
           </tbody>
         </thead>
     </table>
-    </div>
+  </div>
 
     <script>
       $(function(){
+
+       // var path = location.pathname.substr(1).split('/');
+       // console.log(path);
+       // path.pop();
+       // path.pop();
+       // location.pathname=path.join('/');
+
+      //  console.log(path);
+
+      // console.log(path[0]+'/'+path[1]);
+
+      // if(path[0] == 'attendance_book'){
+      //   var insert_path = path+"wbsAppoInsert";
+      //   var delete_path = path+"wbsAppoDelete";
+      // }else{
+        // var insert_path = path[0]+'/'+path[1]+"/appointments/wbsAppoInsert";
+        var insert_path = "wbsAppoInsert"
+        var delete_path = "wbsAppoDelete";
+      // }
+
+      console.log(insert_path);
+      console.log(delete_path);
+
 
         $('.clockpicker').clockpicker();
 
@@ -320,7 +381,9 @@
 
                       //出勤予定のデータベース格納処理
                       $.ajax({
-                        url: "/git_test/attendance_book/appointments/wbsAppoInsert",
+                        // url: "/git_test/attendance_book/appointments/wbsAppoInsert",                  
+                        url: insert_path,
+                        // url: "/wbsAppoInsert",
                         type: "POST",
                         contentType: "application/json",
                         // dataType: "text",
@@ -340,8 +403,6 @@
                    }
                });
            
-              
-
           //出勤予定の削除処理
              $('.login_user').dblclick(function(){
 
@@ -358,12 +419,11 @@
                       //出勤予定のデータベース削除処理
                       $.ajax({
                         url: "/git_test/attendance_book/appointments/wbsAppoDelete",
+                        // url: delete_path,
                         type: "POST",
                         contentType: "application/json",
-                        // dataType: "text",
                         data: JSON.stringify(param),
                         success: function(){
-                           // alert("削除しました");
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown){
                           console.log(XMLHttpRequest); // XMLHttpRequestオブジェクト
@@ -383,7 +443,6 @@
           $('#operation').click(function(){
             $('#process').toggle();
           });
-
       });//一番最後
     </script>
 </body>

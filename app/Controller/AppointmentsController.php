@@ -1,14 +1,14 @@
 <?php
 App::uses('AppController', 'Controller');
 $components = array('Auth', 'Session', 'Cookie','RequestHandler');
-//public $components = array('Session');
-
 
 class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
-    'User'
+    'User',
+    'Image'
   );
+
 
 public $helpers = array('Html','Form','Session');
 
@@ -18,7 +18,6 @@ public $helpers = array('Html','Form','Session');
     //認証不要ページの指定
     $this->Auth->allow('index');
     $this->set('user', $this->Auth->user());
-    //$this->layout = 'mylayout';
   }
 
   public function index($date_id = 0)
@@ -169,60 +168,44 @@ public $helpers = array('Html','Form','Session');
       $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
       $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
       $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
-
-      // $appointment_date = $this->Appointment->query("SELECT appointments.user_id,appointments.date FROM appointments");
-      // $appointment_start = $this->Appointment->query("SELECT appointments.user_id,appointments.start FROM appointments");
-
+      
+      $login_user_image_params = $this->Image->query("SELECT * FROM images WHERE user_id = \"$login_user_id\"");
+      $image_param_su = $this->Image->query("SELECT COUNT(user_id) FROM images");
 
       //データ渡し
     $this->Session->setFlash('1 ~ 10日の予定が追加されている必要があります','default',array('class' => 'success'),'one');
     $this->Session->setFlash('11 ~ 20日の予定が追加されている必要があります','default',array('class' => 'success'),'two');
     $this->Session->setFlash('21 ~ '.$now_days.'の予定が追加されている必要があります','default',array('class' => 'success'),'three');
 
-    // $user = $this->Auth->user();
     $this->set('login_user_ids',$login_user_id);
     $this->set('login_user_params',$login_user_param);
     $this->set('login_user_param_count',$login_user_param_count);
 
-
     $this->set('user_names', $this->User->find('all'));
     $this->set('user_id_counts', $user_id_count);
-    $this->set('param_counts',$param_count);
-    // $this->set('appointment_dates', $appointment_date);
-    // $this->set('appointment_starts', $appointment_start);
+    $this->set('param_counts',$param_count); 
     $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
+   
+      //画像出力処理
+    $this->set('image_params', $this->Image->find('all',array('order' => array('user_id' => 'asc'))));
+    $this->set('login_user_image_params', $login_user_image_params);
+    $this->set('image_param_su',$image_param_su);
+
     $this->set('title_for_layout', 'ホワイトボードページ');
-
   }
-
-
-
-  // public function wbsinsert(){
-  //     $this->autoRender = FALSE;
-  //        if($this->request->is('ajax')) {
-  //            // return $data;
-  //            return $data; 
-  //        }
-  // }
 
   public function wbsAppoInsert(){
       $this->autoRender = FALSE;
          if($this->request->is('ajax')) {
-      // if($this->RequestHandler->isAjax()){
           if(intval(substr($this->data['start'],0,2)) < 12){
             $data = '○';
           }else{
             $data = '△';
           }
-     //   var_dump($this->request->data);
           if($this->Appointment->save($this->request->data)){
-             // $this->Session->setFlash('Success!');
-             // $data = "ok";
-            // $this->redirect(array('controller' => 'appointments','action' => 'whitebord'));
             }
           else{
              $this->Session->setFlash('failed!');
-          // exit();
          }
         }
          return $data;
@@ -236,14 +219,9 @@ public $helpers = array('Html','Form','Session');
     $delete_id = $this->request->data('user_id');
     $delete_day = $this->request->data('date');
 
-    // if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)
     if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)) && $this->Appointment->deleteAll(array('Appointment.date' => $delete_day))){
-
-    // }
-
-      // if($this->Appointment->delete($this->request->data('Appointment.date'))){
-          // $this->Session->setFlash('Delete Success!');
-      }else{
+      
+    }else{
            $this->Session->setFlash('Delete failed!');
       }
     }
@@ -253,7 +231,7 @@ public $helpers = array('Html','Form','Session');
      //日付取得
            $date = date('Y-m-d');
       //ユーザー情報取得
-      // $name = $this->Auth->user('name');
+    
       $login_user_id = $this->Auth->user('id');
       $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
       $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
@@ -299,5 +277,17 @@ public $helpers = array('Html','Form','Session');
     $this->set('title_for_layout', 'WBS翌月');
 
   }
+
+
+    function contents($filename) {
+        $this->layout = false;
+        $image = $this->Image->findByFilename($filename);
+        if (empty($image)) {
+            $this->cakeError('error404');
+        }
+        header('Content-type: image/jpeg');//$image['Image']['filetype']
+        echo $image['Image']['contents'];
+    }
+
 
 }

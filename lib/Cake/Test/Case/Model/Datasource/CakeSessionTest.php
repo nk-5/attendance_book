@@ -704,7 +704,7 @@ class CakeSessionTest extends CakeTestCase {
 	public function testSessionTimeout() {
 		Configure::write('debug', 2);
 		Configure::write('Session.defaults', 'cake');
-		Configure::write('Session.autoRegenerate', false);
+		Configure::write('Session.autoRegenerate', true);
 
 		$timeoutSeconds = Configure::read('Session.timeout') * 60;
 
@@ -742,14 +742,14 @@ class CakeSessionTest extends CakeTestCase {
 		TestCakeSession::start();
 		$this->assertEquals(400, Configure::read('Session.cookieTimeout'));
 		$this->assertEquals(400, Configure::read('Session.timeout'));
-		$this->assertEquals(400 * 60, ini_get('session.cookie_lifetime'));
-		$this->assertEquals(400 * 60, ini_get('session.gc_maxlifetime'));
+		$this->assertEquals(400 * 60 * 100, ini_get('session.cookie_lifetime'));
+		$this->assertEquals(400 * 60 * 100, ini_get('session.gc_maxlifetime'));
 
 		$_SESSION = null;
 		Configure::write('Session', array(
 			'defaults' => 'cake',
-			'timeout' => 400,
-			'cookieTimeout' => 600
+			'timeout' => 400 * 100,
+			'cookieTimeout' => 600 * 100
 		));
 		TestCakeSession::start();
 		$this->assertEquals(600, Configure::read('Session.cookieTimeout'));
