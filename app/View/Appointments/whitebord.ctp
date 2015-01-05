@@ -45,6 +45,7 @@
   <h2 position="center"><?php echo ('出勤予定表 ~White Board Style~'); ?></h2>
 
   <!--予定追加のメッセージ-->
+  <p>
     <?php 
       if($today <= 10){
         echo $this->Session->flash('two');  
@@ -54,6 +55,7 @@
         echo $this->Session->flash('one');   
       }
     ?>
+    </p>
 
 <!--予定時間フォーム-->
   <div class="container" style="padding:20px;">
@@ -328,8 +330,8 @@
         var delete_path = "wbsAppoDelete";
       // }
 
-      console.log(insert_path);
-      console.log(delete_path);
+      // console.log(insert_path);
+      // console.log(delete_path);
 
 
         $('.clockpicker').clockpicker();
@@ -343,7 +345,6 @@
 
                   $('.login_user').on('click',function(){
                     if($(this).html() != "○" && $(this).html() != "△"){
-                      // function insert(){
                       var in_time     = $('#in_time').val();
                       var out_time    = $('#out_time').val();
                        $appoint_day_elem = $(this);
@@ -351,11 +352,6 @@
                        var appo_days = $appoint_day_elem.attr("data-date");
                        var appo_time = Date.parse(appo_days);
                        var now_time = Date.parse(date);
-                       console.log(appo_time);
-                       console.log(now_time);
-                       console.log(appo_days.substr(8,2));
-                       console.log(now_date);
-
 
                        if(appo_time > now_time){
                 
@@ -405,11 +401,13 @@
            
           //出勤予定の削除処理
              $('.login_user').dblclick(function(){
-
                $appoint_day_elem = $(this);
                var login_user = $appoint_day_elem.attr('id');
                var appo_days = $appoint_day_elem.attr("data-date");
-              if(appo_days.substr(8,2) > now_day){
+               var appo_time = Date.parse(appo_days);
+               var now_time = Date.parse(date);
+
+              if(appo_time > now_time){
                 if($(this).html() == "○" || $(this).html() == "△"){
                   $(this).html(" ");
                 var param = {
@@ -418,8 +416,8 @@
 
                       //出勤予定のデータベース削除処理
                       $.ajax({
-                        url: "/git_test/attendance_book/appointments/wbsAppoDelete",
-                        // url: delete_path,
+                        // url: "/git_test/attendance_book/appointments/wbsAppoDelete",
+                        url: delete_path,
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify(param),
@@ -435,8 +433,6 @@
                       }//html.val() == ○ or △
                     }//if(appo_days > now_day)
                   });//.login_user.click function
-               // }
-          // });//delete.click fuction
 
           //操作説明処理
           $('#process').hide();
