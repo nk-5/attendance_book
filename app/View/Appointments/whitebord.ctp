@@ -164,7 +164,7 @@
         }
 
 
-          echo "<td size=20px>".h($user_names[$login_user_ids -1]['User']['username'])."</td>";
+          echo "<td size=20px>".h($login_user_name[0]['users']['username'])."</td>";
 
           for($i = 1;$i<$now_days+1; $i++){
             if($param_su != $login_user_param_count[0][0]['COUNT(user_id)']){

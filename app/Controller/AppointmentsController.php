@@ -166,6 +166,7 @@ public $helpers = array('Html','Form','Session');
 
       //ユーザー情報取得
       $login_user_id = $this->Auth->user('id');
+      $login_user_name = $this->Appointment->query("SELECT username FROM users WHERE id = \"$login_user_id\"");
       $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
       $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
       $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
@@ -180,6 +181,7 @@ public $helpers = array('Html','Form','Session');
     $this->Session->setFlash('21 ~ '.$now_days.'の予定が追加されている必要があります','default',array('class' => 'success'),'three');
 
     $this->set('login_user_ids',$login_user_id);
+    $this->set('login_user_name',$login_user_name);
     $this->set('login_user_params',$login_user_param);
     $this->set('login_user_param_count',$login_user_param_count);
 
