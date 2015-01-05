@@ -64,7 +64,7 @@
           <div class="form-group">
             <label for="in-time">出勤時間</label>
             <div>
-              <input type="text" size="5" id="in_time" class="clockpicker" data-autoclose="true" value="09:00">
+              <input name="start" type="text" size="5" id="in_time" class="clockpicker" data-autoclose="true" value="09:00">
             </div>
           </div>
           <div class="form-group">
@@ -309,30 +309,9 @@
   </div>
 
     <script>
-      $(function(){
-
-       // var path = location.pathname.substr(1).split('/');
-       // console.log(path);
-       // path.pop();
-       // path.pop();
-       // location.pathname=path.join('/');
-
-      //  console.log(path);
-
-      // console.log(path[0]+'/'+path[1]);
-
-      // if(path[0] == 'attendance_book'){
-      //   var insert_path = path+"wbsAppoInsert";
-      //   var delete_path = path+"wbsAppoDelete";
-      // }else{
-        // var insert_path = path[0]+'/'+path[1]+"/appointments/wbsAppoInsert";
+      $(function(){      
         var insert_path = "wbsAppoInsert"
         var delete_path = "wbsAppoDelete";
-      // }
-
-      // console.log(insert_path);
-      // console.log(delete_path);
-
 
         $('.clockpicker').clockpicker();
 
@@ -353,8 +332,8 @@
                        var appo_time = Date.parse(appo_days);
                        var now_time = Date.parse(date);
 
-                       if(appo_time > now_time){
-                
+                    if(Number(in_time.length) == 5){
+                       if(appo_time > now_time){ 
                           if(in_time.substr(0,2) < 12){
                             var time_data = '○';          
                           }else{
@@ -395,7 +374,11 @@
                           alert("格納失敗");
                         }
                       });//ajax2  
-                    }//if(appo_days > now_day)
+                     }//if(appo_days > now_day)
+                    }//開始時刻のバリデーション
+                    else{
+                      alert("開始時刻は09：00など4文字で入力して下さい");
+                    }
                    }
                });
            

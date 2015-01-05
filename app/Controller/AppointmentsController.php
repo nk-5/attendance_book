@@ -2,12 +2,14 @@
 App::uses('AppController', 'Controller');
 $components = array('Auth', 'Session', 'Cookie','RequestHandler');
 
+
 class AppointmentsController extends AppController {
   public $uses = array(
     'Appointment',
     'User',
     'Image'
   );
+
 
 
 public $helpers = array('Html','Form','Session');
@@ -196,7 +198,7 @@ public $helpers = array('Html','Form','Session');
 
   public function wbsAppoInsert(){
       $this->autoRender = FALSE;
-         if($this->request->is('ajax')) {
+        if($this->request->is('ajax')) {
           if(intval(substr($this->data['start'],0,2)) < 12){
             $data = '○';
           }else{
@@ -206,7 +208,7 @@ public $helpers = array('Html','Form','Session');
             }
           else{
              $this->Session->setFlash('failed!');
-         }
+          }
         }
          return $data;
   }
