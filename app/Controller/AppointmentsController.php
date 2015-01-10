@@ -237,7 +237,12 @@ public $helpers = array('Html','Form','Session');
         if (empty($image)) {
             $this->cakeError('error404');
         }
-        header('Content-type: image/jpeg');//$image['Image']['filetype']
+        // header('Content-type: image/jpeg');//$image['Image']['filetype']
+        // echo 'h';
+        // $this->response->header('Content-type', 'image/jpeg');
+        // $this->response->header(array('Content-type' => 'image/jpeg'));
+        $this->response->type('jpg');
+        // $this->response->header('aaa', 'bbb');
         echo $image['Image']['contents'];
     }
 

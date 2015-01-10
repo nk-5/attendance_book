@@ -87,14 +87,14 @@
      </form>
     </span>
 
-    <span style="float:right; margin-right:300px;">
-      <?php 
-        echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
-        echo $this->Form->input( 'image', array( 'type' => 'file','style' => 'float:left;'));
-        echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
-        echo $this->Form->end(); 
+   <!--  <span style="float:right; margin-right:300px;">
+      // <?php 
+      //   echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
+      //   echo $this->Form->input( 'image', array( 'type' => 'file','style' => 'float:left;'));
+      //   echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
+      //   echo $this->Form->end(); 
       ?>
-    </span>
+    </span> -->
   </div>
 <br><br><br>
 
