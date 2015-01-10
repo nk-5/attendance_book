@@ -6,7 +6,7 @@
               else{
                 echo $tmp_user[0]["User"]["name"] . "さんの予定一覧";} ?>
     </h2>
-    <dl>
+    <dl style="float:left; width:300px;">
       <dt class="my_dt">ID</dt>
       <dd class="my_dd"><?php echo $tmp_user[0]["User"]["id"]; ?>
       <dt class="my_dt">Name</dt>
@@ -15,6 +15,31 @@
       <dd class="my_dd"><?php echo $tmp_user[0]["User"]["username"]; ?>
     </dl>
 
+    <span>
+            <?php //アイコン画像の出力  テーブルにデータがなかったらNO IMAGE
+                if($image_param_su[0][0]['COUNT(user_id)'] == 0){
+                  echo "<img src=../../app/webroot/img/images/user_icon_image.gif>";
+                }
+                elseif($login_user_image_params  != null){
+                  echo "<img src=../../app/webroot/img/images/{$login_user_image_params[0]['images']['filename']}>";
+                }else{
+                  echo "<img src=../../app/webroot/img/images/user_icon_image.gif>";
+                }
+            ?>
+    </span>
+
+    <span style="margin-right:300px; width:300px; float:right;">
+      <?php 
+        echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
+        echo $this->Form->input('image', array( 'type' => 'file','style' => 'float:left;'));
+        echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
+        echo $this->Form->end(); 
+      ?>
+    </span>
+
+
+
+    <div style="clear:right;"></div>
     <h3>予定リスト</h3>
     <table cellpadding="0" cellspacing="0">
     <tr>
@@ -42,4 +67,6 @@
         <li><?php echo $this->Html->link('名前の変更', array('controller' => 'users', 'action' => 'name'))?></li>
         <li><?php echo $this->Html->link('ユーザーの管理', array('controller' => 'users', 'action' => "admin/".$user['id'])); ?>
     </ul>
+
 </div>
+ 

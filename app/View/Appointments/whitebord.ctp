@@ -87,14 +87,14 @@
      </form>
     </span>
 
-    <span style="float:right; margin-right:300px;">
-      <?php 
-        echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
-        echo $this->Form->input( 'image', array( 'type' => 'file','style' => 'float:left;'));
-        echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
-        echo $this->Form->end(); 
+   <!--  <span style="float:right; margin-right:300px;">
+      // <?php 
+      //   echo $this->Form->create( 'Images', array('type'=>'file', 'enctype' => 'multipart/form-data',  'action' => 'imageAdd'));
+      //   echo $this->Form->input( 'image', array( 'type' => 'file','style' => 'float:left;'));
+      //   echo $this->Form->submit( __('Upload'),array('style' => 'float:right;'));
+      //   echo $this->Form->end(); 
       ?>
-    </span>
+    </span> -->
   </div>
 <br><br><br>
 
@@ -249,23 +249,23 @@
                     if($now_month == intval(substr($appointment_params[$param_su]['Appointment']['date'],-5,2))){
                       if($i == intval(substr($appointment_params[$param_su]['Appointment']['date'],-2,2))){
                         if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) < 12){
-                          echo"<td style=color:red data-date=$now_year.$now_month.$i id=$user_id>"." ○"."</td>";
+                          echo"<td style=color:red data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." ○"."</td>";
                           $param_su++;             
                   
                          }else if(intval(substr($appointment_params[$param_su]['Appointment']['start'],0,2)) >= 12){
-                           echo"<td style=color:green data-date=$now_year.$now_month.$i id=$user_id>"." △"."</td>";
+                           echo"<td style=color:green data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." △"."</td>";
                            $param_su++;
                           }
 
                       }else{
-                        echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>"; 
+                        echo"<td data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." "."</td>"; 
                       }
                     
                     }else{
                      if($appointment_params[$param_su]['Appointment']['date'] < $now_date){
                        $i = 0;
                      }else if($appointment_params[$param_su]['Appointment']['date'] > $now_date){
-                      echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";     
+                      echo"<td data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." "."</td>";     
                      }
                      $param_su++;     
                   }
@@ -274,7 +274,7 @@
                   if($appointment_params[$param_su]['Appointment']['date'] < $now_date){
                     $i = 0;
                   }else if($appointment_params[$param_su]['Appointment']['date'] > $now_date){
-                    echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";     
+                    echo"<td data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." "."</td>";     
                   }
                   $param_su++;    
                 }
@@ -286,12 +286,12 @@
                 }
 
                 if($i<$now_days+1 && $appointment_params[$param_su]['Appointment']['user_id'] > $user_name['User']['id']){
-                   echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>"; 
+                   echo"<td data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." "."</td>"; 
                 }
              }
             
           }else{
-            echo"<td data-date=$now_year.$now_month.$i id=$user_id>"." "."</td>";          
+            echo"<td data-date=$now_year.$now_month.$i id=$user_id class=other_user>"." "."</td>";          
           }
         }
        }
@@ -321,6 +321,22 @@
               var now_year  = date.getFullYear();
               var now_date = String(now_year)+"."+String(now_month)+"."+String(now_day);
               Number(now_date);
+
+              console.log(now_day);
+
+              $('.login_user').each(function(i,elem){
+                var light_day = $(elem).data('date');
+                if(now_day == light_day.substr(8,2)){ 
+                  $(elem).css('background','#FFA');
+                }
+              });
+
+              $('.other_user').each(function(i,elem){
+                var light_day = $(elem).data('date');
+                if(now_day == light_day.substr(8,2)){ 
+                  $(elem).css('background','#FFA');
+                }
+              });
 
                   $('.login_user').on('click',function(){
                     if($(this).html() != "○" && $(this).html() != "△"){
@@ -356,12 +372,10 @@
 
                       //出勤予定のデータベース格納処理
                       $.ajax({
-                        // url: "/git_test/attendance_book/appointments/wbsAppoInsert",                  
                         url: insert_path,
-                        // url: "/wbsAppoInsert",
                         type: "POST",
                         contentType: "application/json",
-                        // dataType: "text",
+                
                         data: JSON.stringify(param),
 
                         success: function(){
@@ -399,7 +413,6 @@
 
                       //出勤予定のデータベース削除処理
                       $.ajax({
-                        // url: "/git_test/attendance_book/appointments/wbsAppoDelete",
                         url: delete_path,
                         type: "POST",
                         contentType: "application/json",
@@ -422,6 +435,10 @@
           $('#operation').click(function(){
             $('#process').toggle();
           });
+
+          if(now_date == $('td').data('date')){
+            $('td').css('background','#FFA');
+          }
       });//一番最後
     </script>
 </body>

@@ -220,10 +220,10 @@ public $helpers = array('Html','Form','Session');
   public function wbsAppoDelete(){
     $this->autoRender = FALSE;
     if($this->request->is('ajax')){
-    $delete_id = $this->request->data('user_id');
-    $delete_day = $this->request->data('date');
+      $user_id = $this->Auth->user('id');
+      $delete_day = $this->request->data('date');
 
-    if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)) && $this->Appointment->deleteAll(array('Appointment.date' => $delete_day))){
+    if($this->Appointment->deleteAll(array('Appointment.date' => $delete_day, 'Appointment.user_id' => $user_id))){
       
     }else{
            $this->Session->setFlash('Delete failed!');
@@ -231,65 +231,18 @@ public $helpers = array('Html','Form','Session');
     }
   }
 
-  public function whitebord_prev(){
-     //日付取得
-           $date = date('Y-m-d');
-      //ユーザー情報取得
-    
-      $login_user_id = $this->Auth->user('id');
-      $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
-      $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
-      $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
-      $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
-
-      //データ渡し
-    // $user = $this->Auth->user();
-    $this->set('login_user_ids',$login_user_id);
-    $this->set('login_user_params',$login_user_param);
-    $this->set('login_user_param_count',$login_user_param_count);
-
-
-    $this->set('user_names', $this->User->find('all'));
-    $this->set('user_id_counts', $user_id_count);
-    $this->set('param_counts',$param_count);
-    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
-    $this->set('title_for_layout', 'WBS前月');
-
-  }
-
-    public function whitebord_next(){
-     //日付取得
-      $date = date('Y-m-d');
-      //ユーザー情報取得
-      $login_user_id = $this->Auth->user('id');
-      $login_user_param = $this->Appointment->query("SELECT * FROM appointments WHERE user_id = \"$login_user_id\" ORDER BY appointments.user_id,appointments.date asc");
-      $login_user_param_count = $this->Appointment->query("SELECT COUNT(user_id) FROM appointments WHERE user_id = \"$login_user_id\"");
-      $user_id_count = $this->User->query("SELECT COUNT(id) FROM users");
-      $param_count = $this->Appointment->query("SELECT COUNT(id) FROM appointments");
-
-      //データ渡し
-
-    $this->set('login_user_ids',$login_user_id);
-    $this->set('login_user_params',$login_user_param);
-    $this->set('login_user_param_count',$login_user_param_count);
-
-
-    $this->set('user_names', $this->User->find('all'));
-    $this->set('user_id_counts', $user_id_count);
-    $this->set('param_counts',$param_count);
-    $this->set('appointment_params', $this->Appointment->find('all',array('order' => array('user_id' => 'asc','date' => 'asc'))));
-    $this->set('title_for_layout', 'WBS翌月');
-
-  }
-
-
     function contents($filename) {
         $this->layout = false;
         $image = $this->Image->findByFilename($filename);
         if (empty($image)) {
             $this->cakeError('error404');
         }
-        header('Content-type: image/jpeg');//$image['Image']['filetype']
+        // header('Content-type: image/jpeg');//$image['Image']['filetype']
+        // echo 'h';
+        // $this->response->header('Content-type', 'image/jpeg');
+        // $this->response->header(array('Content-type' => 'image/jpeg'));
+        $this->response->type('jpg');
+        // $this->response->header('aaa', 'bbb');
         echo $image['Image']['contents'];
     }
 

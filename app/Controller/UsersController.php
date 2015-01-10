@@ -1,11 +1,14 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
+
 $components = array('Auth', 'Session');
 class UsersController extends AppController
 {
   public $uses = array(
     'Appointment',
-    'User'
+    'User',
+    'Image'
   );
   
   public function beforeFilter()
@@ -32,6 +35,23 @@ class UsersController extends AppController
     }
   }
 
+  // public function pass_create()
+  // {
+
+  //   $email_adress = $this->request->data['User']['email_adress'];
+  //   $new_pass = substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'),0,8);
+    
+
+  //    $Email = new CakeEmail('smtp');
+
+  //   $Email->from ='nkws27@gmail.com';
+  //   $Email->to = $email_adress;
+  //   $Email->subject = 'パスワード変更';
+  //   $Email->send = $new_pass;
+
+
+  // }
+
   public function logout()
   {
     $this->Auth->logout();
@@ -45,6 +65,11 @@ class UsersController extends AppController
     //ユーザー情報取得
     //idをurlから取得
     $this->User->id = $id;
+    $login_user_image_params = $this->Image->query("SELECT * FROM images WHERE user_id = \"$id\"");
+    $image_param_su = $this->Image->query("SELECT COUNT(user_id) FROM images");
+    
+    $this->set('login_user_image_params', $login_user_image_params);
+    $this->set('image_param_su',$image_param_su);
     $tmp_user = $this->User->find('all',array(
       'conditions' => array(
         'id' => $id
@@ -225,4 +250,19 @@ class UsersController extends AppController
       }
     }
   }
+
+   function contents($filename) {
+        $this->layout = false;
+        $image = $this->Image->findByFilename($filename);
+        if (empty($image)) {
+            $this->cakeError('error404');
+        }
+        // header('Content-type: image/jpeg');//$image['Image']['filetype']
+        // echo 'h';
+        // $this->response->header('Content-type', 'image/jpeg');
+        // $this->response->header(array('Content-type' => 'image/jpeg'));
+        $this->response->type('jpg');
+        // $this->response->header('aaa', 'bbb');
+        echo $image['Image']['contents'];
+    }
 }
