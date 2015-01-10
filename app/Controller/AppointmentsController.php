@@ -220,10 +220,10 @@ public $helpers = array('Html','Form','Session');
   public function wbsAppoDelete(){
     $this->autoRender = FALSE;
     if($this->request->is('ajax')){
-    $delete_id = $this->request->data('user_id');
-    $delete_day = $this->request->data('date');
+      $user_id = $this->Auth->user('id');
+      $delete_day = $this->request->data('date');
 
-    if($this->Appointment->deleteAll(array('Appointment.user_id' => $delete_id)) && $this->Appointment->deleteAll(array('Appointment.date' => $delete_day))){
+    if($this->Appointment->deleteAll(array('Appointment.date' => $delete_day, 'Appointment.user_id' => $user_id))){
       
     }else{
            $this->Session->setFlash('Delete failed!');
